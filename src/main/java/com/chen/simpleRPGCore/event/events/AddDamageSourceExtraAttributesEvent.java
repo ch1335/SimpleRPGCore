@@ -12,4 +12,8 @@ public class AddDamageSourceExtraAttributesEvent extends Event {
     public AddDamageSourceExtraAttributesEvent(Set<Holder<Attribute>> attributes) {
         this.attributes = attributes;
     }
+
+    public void add(Holder<Attribute> attributeHolder){
+        attributes.add(attributeHolder);
+    }
 }
