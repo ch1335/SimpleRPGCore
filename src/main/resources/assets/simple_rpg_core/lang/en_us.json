@@ -1,0 +1,6 @@
+{
+  "simple_rpg_core.attribute.name.generic.critical_chance": "Critical Chance",
+  "simple_rpg_core.attribute.name.generic.critical_damage": "Critical Damage",
+  "simple_rpg_core.attribute.name.generic.life_steal": "Life Steal",
+  "simple_rpg_core.attribute.name.generic.armor_penetration": "Armor Penetration"
+}

@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "com.chen.simpleRPGCore.mixins",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "minecraft.CombatRulesMixin",
+    "minecraft.DamageSourceMixin",
+    "minecraft.ItemStackMixin",
+    "minecraft.LivingEntityMixin",
+    "minecraft.PlayerMixin"
+  ],
+  "client": [
+  ],
+  "minVersion": "0.8"
+}

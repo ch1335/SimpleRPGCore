@@ -1,0 +1,6 @@
+{
+  "simple_rpg_core.attribute.name.generic.critical_chance": "暴击几率",
+  "simple_rpg_core.attribute.name.generic.critical_damage": "暴击伤害",
+  "simple_rpg_core.attribute.name.generic.life_steal": "生命窃取",
+  "simple_rpg_core.attribute.name.generic.armor_penetration": "护甲穿透"
+}
