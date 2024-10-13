@@ -18,6 +18,10 @@ public class SRCAttributes {
 
     public static final DeferredHolder<Attribute, SRCAttribute> ARMOR_PENETRATION  = ATTRIBUTE_DEFERRED_REGISTER.register("armor_penetration", () -> (SRCAttribute) new SRCAttribute(makeDescriptionId("armor_penetration"), 0, 0, 114514).setSyncable(true));
 
+    public static final DeferredHolder<Attribute, SRCAttribute> MINING_FORTUNE = ATTRIBUTE_DEFERRED_REGISTER.register("mining_fortune",()->(SRCAttribute) new SRCAttribute(makeDescriptionId("mining_fortune"),0,0,114514).setSyncable(true));
+
+    public static final DeferredHolder<Attribute, SRCAttribute> MOB_LOOTING = ATTRIBUTE_DEFERRED_REGISTER.register("mob_looting",()->(SRCAttribute) new SRCAttribute(makeDescriptionId("mob_looting"),0,0,114514).setSyncable(true));
+
     private static String makeDescriptionId(String s) {
         return SimpleRPGCore.MODID + ".attribute.name.generic." + s;
     }

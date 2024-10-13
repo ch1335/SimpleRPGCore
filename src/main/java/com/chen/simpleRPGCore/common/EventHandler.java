@@ -14,8 +14,10 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.damagesource.DamageContainer;
+import net.neoforged.neoforge.event.LootTableLoadEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+import net.neoforged.neoforge.event.level.BlockDropsEvent;
 
 public class EventHandler {
     @EventBusSubscriber(modid = SimpleRPGCore.MODID, bus = EventBusSubscriber.Bus.GAME)
@@ -48,7 +50,7 @@ public class EventHandler {
                 }
             }
 
-            if(SRCEventFactory.modifyDamageAfterCritical(container, livingEntity)) event.setCanceled(true);
+            if (SRCEventFactory.modifyDamageAfterCritical(container, livingEntity)) event.setCanceled(true);
 
         }
 
@@ -67,6 +69,8 @@ public class EventHandler {
             event.add(EntityType.PLAYER, SRCAttributes.CRITICAL_DAMAGE);
             event.add(EntityType.PLAYER, SRCAttributes.LIFE_STEAL);
             event.add(EntityType.PLAYER, SRCAttributes.ARMOR_PENETRATION);
+            event.add(EntityType.PLAYER, SRCAttributes.MINING_FORTUNE);
+            event.add(EntityType.PLAYER, SRCAttributes.MOB_LOOTING);
         }
     }
 }

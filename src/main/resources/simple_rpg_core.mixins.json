@@ -3,8 +3,10 @@
   "package": "com.chen.simpleRPGCore.mixins",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "minecraft.ApplyBonusCountMixin",
     "minecraft.CombatRulesMixin",
     "minecraft.DamageSourceMixin",
+    "minecraft.EnchantmentHelperMixin",
     "minecraft.ItemStackMixin",
     "minecraft.LivingEntityMixin",
     "minecraft.PlayerMixin"
