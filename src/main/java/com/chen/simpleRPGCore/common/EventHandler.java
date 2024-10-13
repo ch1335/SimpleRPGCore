@@ -6,7 +6,6 @@ import com.chen.simpleRPGCore.event.SRCEventFactory;
 import com.chen.simpleRPGCore.mixinsAPI.minecraft.IDamageSourceMixin;
 import net.minecraft.network.protocol.game.ClientboundAnimatePacket;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;

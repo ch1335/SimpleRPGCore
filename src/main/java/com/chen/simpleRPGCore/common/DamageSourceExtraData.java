@@ -3,6 +3,7 @@ package com.chen.simpleRPGCore.common;
 import com.chen.simpleRPGCore.attribute.SRCAttributes;
 import com.chen.simpleRPGCore.event.SRCEventFactory;
 import com.google.common.collect.ImmutableMap;
+import it.unimi.dsi.fastutil.ints.IntArraySet;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,11 +15,11 @@ import java.util.Set;
 
 public class DamageSourceExtraData {
 
-    private final Set<Integer> meleeDamageEntities = new HashSet<>();
+    private final IntArraySet meleeDamageEntities = new IntArraySet();
 
-    private final Set<Integer> sweepingDamageEntities = new HashSet<>();
+    private final IntArraySet sweepingDamageEntities = new IntArraySet();
 
-    private final Set<Integer> criticalDamageEntities = new HashSet<>();
+    private final IntArraySet criticalDamageEntities = new IntArraySet();
 
     private final ImmutableMap<Attribute, AttributeOriginalData> attributeData;
 
