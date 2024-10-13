@@ -2,6 +2,7 @@ package com.chen.simpleRPGCore.mixins.minecraft;
 
 
 import com.chen.simpleRPGCore.attribute.SRCAttributes;
+import com.chen.simpleRPGCore.utils.Util;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.LivingEntity;
@@ -26,7 +27,7 @@ public class ApplyBonusCountMixin {
     private int addMiningFortuneAttributeBonus(int fortuneLevel, @Local(argsOnly = true) LootContext context) {
         LivingEntity living = (LivingEntity) context.getParamOrNull(LootContextParams.THIS_ENTITY);
         if (this.enchantment.getKey() == Enchantments.FORTUNE && living != null && living.getAttributes().hasAttribute(SRCAttributes.MINING_FORTUNE)) {
-            return (int) (fortuneLevel + living.getAttributeValue(SRCAttributes.MINING_FORTUNE));
+            return fortuneLevel + Util.toInt(living.getAttributeValue(SRCAttributes.MINING_FORTUNE),living.getRandom());
         }
         return fortuneLevel;
     }
