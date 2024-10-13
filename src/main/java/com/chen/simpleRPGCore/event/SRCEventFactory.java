@@ -13,12 +13,12 @@ import java.util.Set;
 
 public class SRCEventFactory {
 
-    public static void modifyDamageBeforeCritical(DamageContainer damageContainer, LivingEntity target){
-        NeoForge.EVENT_BUS.post(new ModifyDamageEvent.BeforeCritical(damageContainer,target));
+    public static boolean modifyDamageBeforeCritical(DamageContainer damageContainer, LivingEntity target){
+       return NeoForge.EVENT_BUS.post(new ModifyDamageEvent.BeforeCritical(damageContainer,target)).isCanceled();
     }
 
-    public static void modifyDamageAfterCritical(DamageContainer damageContainer, LivingEntity target){
-        NeoForge.EVENT_BUS.post(new ModifyDamageEvent.AfterCritical(damageContainer,target));
+    public static boolean modifyDamageAfterCritical(DamageContainer damageContainer, LivingEntity target){
+       return NeoForge.EVENT_BUS.post(new ModifyDamageEvent.AfterCritical(damageContainer,target)).isCanceled();
     }
 
     public static boolean modPreCritical(DamageContainer damageContainer, LivingEntity target){

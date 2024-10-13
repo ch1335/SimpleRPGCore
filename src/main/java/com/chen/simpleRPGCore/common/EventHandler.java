@@ -33,7 +33,7 @@ public class EventHandler {
                 container.setPostAttackInvulnerabilityTicks(0);
             }
 
-            SRCEventFactory.modifyDamageBeforeCritical(container, livingEntity);
+            if (SRCEventFactory.modifyDamageBeforeCritical(container, livingEntity)) event.setCanceled(true);
 
             float criticalChance = (float) extraData.getAttributeOriginalHolder(SRCAttributes.CRITICAL_CHANCE).getNew(0);
 
@@ -49,7 +49,7 @@ public class EventHandler {
                 }
             }
 
-            SRCEventFactory.modifyDamageAfterCritical(container, livingEntity);
+            if(SRCEventFactory.modifyDamageAfterCritical(container, livingEntity)) event.setCanceled(true);
 
         }
 

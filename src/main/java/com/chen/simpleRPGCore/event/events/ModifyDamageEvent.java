@@ -4,9 +4,10 @@ import com.chen.simpleRPGCore.common.DamageSourceExtraData;
 import com.chen.simpleRPGCore.mixinsAPI.minecraft.IDamageSourceMixin;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.neoforge.common.damagesource.DamageContainer;
 
-public abstract class ModifyDamageEvent extends Event {
+public abstract class ModifyDamageEvent extends Event implements ICancellableEvent {
     private final DamageContainer damageContainer;
     private final LivingEntity entity;
     private final DamageSourceExtraData extraData;
@@ -27,7 +28,6 @@ public abstract class ModifyDamageEvent extends Event {
     public DamageSourceExtraData getExtraData() {
         return extraData;
     }
-
 
     public static class BeforeCritical extends ModifyDamageEvent{
 
