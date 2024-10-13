@@ -14,6 +14,7 @@ public class AttributeOriginalData {
         return original;
     }
 
+    // rest the new amount to original
     public void restToOriginal() {
         newAmount = original;
     }
@@ -29,14 +30,16 @@ public class AttributeOriginalData {
             return new AttributeOriginalDataHolder(attributeOriginalData);
         }
 
+        //get original amount. if Attribute don't exist then return def
         public double getOriginal(double def) {
             return data != null ? data.getOriginal() : def;
         }
-
+        //get new amount. if Attribute don't exist then return def
         public double getNew(double def) {
             return data != null ? data.newAmount : def;
         }
 
+        //set the new amount if Attribute is exist
         public void setNew(double newAmount) {
             if (data != null) data.newAmount = newAmount;
         }
