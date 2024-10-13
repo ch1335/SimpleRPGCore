@@ -25,7 +25,7 @@ public class ApplyBonusCountMixin {
     @ModifyArg(method = "run", index = 2, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/storage/loot/functions/ApplyBonusCount$Formula;calculateNewCount(Lnet/minecraft/util/RandomSource;II)I"))
     private int addMiningFortuneAttributeBonus(int fortuneLevel, @Local(argsOnly = true) LootContext context) {
         LivingEntity living = (LivingEntity) context.getParamOrNull(LootContextParams.THIS_ENTITY);
-        if (this.enchantment == Enchantments.FORTUNE && living != null && living.getAttributes().hasAttribute(SRCAttributes.MINING_FORTUNE)) {
+        if (this.enchantment.getKey() == Enchantments.FORTUNE && living != null && living.getAttributes().hasAttribute(SRCAttributes.MINING_FORTUNE)) {
             return (int) (fortuneLevel + living.getAttributeValue(SRCAttributes.MINING_FORTUNE));
         }
         return fortuneLevel;

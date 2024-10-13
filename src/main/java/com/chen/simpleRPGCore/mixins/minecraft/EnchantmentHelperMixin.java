@@ -16,7 +16,7 @@ public class EnchantmentHelperMixin {
 
     @Inject(method = "getEnchantmentLevel",at = @At("RETURN"), cancellable = true)
     private static void getEnchantmentLevel(Holder<Enchantment> pEnchantment, LivingEntity pEntity, CallbackInfoReturnable<Integer> cir){
-        if (pEnchantment == Enchantments.LOOTING && pEntity.getAttributes().hasAttribute(SRCAttributes.MOB_LOOTING)) {
+        if (pEnchantment.getKey() == Enchantments.LOOTING && pEntity.getAttributes().hasAttribute(SRCAttributes.MOB_LOOTING)) {
             cir.setReturnValue((int) (cir.getReturnValue() + pEntity.getAttributeValue(SRCAttributes.MOB_LOOTING)));
         }
     }
