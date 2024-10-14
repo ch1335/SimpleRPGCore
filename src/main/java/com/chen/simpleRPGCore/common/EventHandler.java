@@ -7,6 +7,7 @@ import com.chen.simpleRPGCore.mixinsAPI.minecraft.IDamageSourceMixin;
 import net.minecraft.network.protocol.game.ClientboundAnimatePacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,10 +15,9 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.damagesource.DamageContainer;
-import net.neoforged.neoforge.event.LootTableLoadEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
-import net.neoforged.neoforge.event.level.BlockDropsEvent;
 
 public class EventHandler {
     @EventBusSubscriber(modid = SimpleRPGCore.MODID, bus = EventBusSubscriber.Bus.GAME)
@@ -30,9 +30,6 @@ public class EventHandler {
             DamageSourceExtraData extraData = ((IDamageSourceMixin) container.getSource()).src$getExtraData();
 
 
-            if (extraData.isMeleeDamageToEntity(livingEntity)) {
-                container.setPostAttackInvulnerabilityTicks(0);
-            }
 
             if (SRCEventFactory.modifyDamageBeforeCritical(container, livingEntity)) event.setCanceled(true);
 
@@ -52,11 +49,25 @@ public class EventHandler {
 
             if (SRCEventFactory.modifyDamageAfterCritical(container, livingEntity)) event.setCanceled(true);
 
+            if (extraData.isBypassesCooldown()) {
+                extraData.originalInvulnerabilityTicksAfterAttack = container.getPostAttackInvulnerabilityTicks();
+                container.setPostAttackInvulnerabilityTicks(0);
+            }
+
         }
 
         @SubscribeEvent(priority = EventPriority.HIGHEST)
         public static void restDamage(LivingIncomingDamageEvent event) {
             ((IDamageSourceMixin) event.getContainer().getSource()).src$getExtraData().restToOriginal();
+        }
+
+        @SubscribeEvent
+        public static void onLivingDamagePost(LivingDamageEvent.Post event){
+            DamageSource source = event.getSource();
+            DamageSourceExtraData extraData = ((IDamageSourceMixin) source).src$getExtraData();
+            if (extraData.isBypassesCooldown()) {
+                event.getEntity().invulnerableTime = extraData.originalInvulnerabilityTicksAfterAttack;
+            }
         }
     }
 

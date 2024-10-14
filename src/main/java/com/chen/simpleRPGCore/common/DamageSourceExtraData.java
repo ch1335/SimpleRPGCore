@@ -23,6 +23,9 @@ public class DamageSourceExtraData {
 
     private final ImmutableMap<Attribute, AttributeOriginalData> attributeData;
 
+    public boolean bypassesCooldown = false;
+
+    public int originalInvulnerabilityTicksAfterAttack = 20;
     //this is paper for kubejs. don't use this in mod
     public Optional<Object> customDataHolder = Optional.empty();
 
@@ -92,5 +95,13 @@ public class DamageSourceExtraData {
             attributes.add(SRCAttributes.ARMOR_PENETRATION);
             SRCEventFactory.addDamageSourceExtraAttributes(attributes);
         }
+    }
+
+    public void setBypassesCooldown(boolean bypassesCooldown) {
+        this.bypassesCooldown = bypassesCooldown;
+    }
+
+    public boolean isBypassesCooldown() {
+        return bypassesCooldown;
     }
 }
