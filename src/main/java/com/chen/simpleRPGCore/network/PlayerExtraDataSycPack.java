@@ -27,9 +27,9 @@ public record PlayerExtraDataSycPack(SycType sycType, CompoundTag data) implemen
             (sycType,data)->new PlayerExtraDataSycPack(SycType.values()[sycType],data)
     );
 
-    public static void SycMana(ServerPlayer player,float mana){
+    public static void SycMana(ServerPlayer player){
         CompoundTag tag = new CompoundTag();
-        tag.putFloat("value",mana);
+        tag.putFloat("value",player.getData(SRCAttachmentTypes.PLAYER_DATA).mana);
         PacketDistributor.sendToPlayer(player, new PlayerExtraDataSycPack(PlayerExtraDataSycPack.SycType.MANA,tag));
     }
 

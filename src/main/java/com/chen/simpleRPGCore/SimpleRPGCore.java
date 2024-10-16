@@ -5,6 +5,7 @@ import com.chen.simpleRPGCore.attribute.SRCAttributes;
 import com.chen.simpleRPGCore.common.DamageSourceExtraData;
 import com.chen.simpleRPGCore.config.ConfigDataHolder;
 import com.chen.simpleRPGCore.event.events.SRCSetConfigEvent;
+import com.chen.simpleRPGCore.item.SRCItems;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.CreativeModeTab;
@@ -39,6 +40,7 @@ public class SimpleRPGCore
         CREATIVE_MODE_TABS.register(modEventBus);
         SRCAttributes.ATTRIBUTE_DEFERRED_REGISTER.register(modEventBus);
         SRCAttachmentTypes.ATTACHMENT_TYPES.register(modEventBus);
+        SRCItems.ITEMS.register(modEventBus);
         NeoForge.EVENT_BUS.register(this);
         modEventBus.addListener(this::addCreative);
 

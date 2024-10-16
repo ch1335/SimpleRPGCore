@@ -2,6 +2,7 @@ package com.chen.simpleRPGCore.common.capability;
 
 import com.chen.simpleRPGCore.attachmentType.SRCAttachmentTypes;
 import com.chen.simpleRPGCore.attribute.SRCAttributes;
+import com.chen.simpleRPGCore.event.SRCEventFactory;
 import com.chen.simpleRPGCore.network.PlayerExtraDataSycPack;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -28,6 +29,27 @@ public class PlayerExtraData implements IPlayerExtraData {
         getDataHolder().mana = mana;
     }
 
+    public boolean costMana(float amount, boolean absolute, String reason) {
+        float finalCost = SRCEventFactory.onPlayerCostMana(player, amount * (absolute ? 1 : (float) player.getAttributeValue(SRCAttributes.MANA_COST)), reason);
+        if (finalCost <= getMana()) {
+            setMana(getMana() - finalCost);
+            sycMana();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void regainMana(float amount, boolean absolute) {
+        float manaRegain = absolute ? 1 : (float) player.getAttributeValue(SRCAttributes.MANA_REGAIN);
+        setMana((float) Math.min(player.getAttributeValue(SRCAttributes.MAX_MANA), getMana() + amount * manaRegain));
+        sycMana();
+    }
+
+    public void regainMana(float amount) {
+        regainMana(amount, false);
+    }
+
     public DataHolder getDataHolder() {
         return player.getData(SRCAttachmentTypes.PLAYER_DATA);
     }
@@ -35,11 +57,15 @@ public class PlayerExtraData implements IPlayerExtraData {
     @Override
     public void tick() {
         if (!player.isDeadOrDying()) {
-            if (player instanceof ServerPlayer serverPlayer && player.level().getGameTime() % 20 == 0) {
-                float maxMana = (float) player.getAttributeValue(SRCAttributes.MAX_MANA);
-                setMana((float) Math.min(maxMana, getMana() + maxMana * 0.05 * player.getAttributeValue(SRCAttributes.MANA_REGAIN)));
-                PlayerExtraDataSycPack.SycMana(serverPlayer,getMana());
+            if (player instanceof ServerPlayer && player.level().getGameTime() % 20 == 0) {
+                regainMana((float) (player.getAttributeValue(SRCAttributes.MAX_MANA) * 0.05));
             }
+        }
+    }
+
+    private void sycMana() {
+        if (player instanceof ServerPlayer serverPlayer) {
+            PlayerExtraDataSycPack.SycMana(serverPlayer);
         }
     }
 

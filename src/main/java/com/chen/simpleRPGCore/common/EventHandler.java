@@ -109,7 +109,7 @@ public class EventHandler {
             event.add(EntityType.PLAYER, SRCAttributes.MAX_MANA);
             event.add(EntityType.PLAYER, SRCAttributes.MANA_REGAIN);
             event.add(EntityType.PLAYER, SRCAttributes.MANA_POWER);
-
+            event.add(EntityType.PLAYER, SRCAttributes.MANA_COST);
             event.getTypes().forEach(entityType -> {
                 event.add(entityType, SRCAttributes.HEAL_EFFECT);
                 event.add(entityType, SRCAttributes.MENDING);

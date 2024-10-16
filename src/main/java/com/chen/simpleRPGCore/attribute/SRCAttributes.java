@@ -33,6 +33,8 @@ public class SRCAttributes {
 
     public static final DeferredHolder<Attribute, SRCAttribute> MANA_POWER = ATTRIBUTE_DEFERRED_REGISTER.register("mana_power",()->(SRCAttribute) new SRCAttribute(makeDescriptionId("mana_power"),0,0,114514).setSyncable(true));
 
+    public static final DeferredHolder<Attribute, SRCAttribute> MANA_COST = ATTRIBUTE_DEFERRED_REGISTER.register("mana_cost_reduction",()->(SRCAttribute) new SRCAttribute(makeDescriptionId("mana_cost"),1,0.1,114514).setPercentage(true).setSyncable(true).setSentiment(Attribute.Sentiment.NEGATIVE));
+
     private static String makeDescriptionId(String s) {
         return SimpleRPGCore.MODID + ".attribute.name.generic." + s;
     }

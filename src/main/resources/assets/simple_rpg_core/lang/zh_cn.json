@@ -9,5 +9,7 @@
   "simple_rpg_core.attribute.name.generic.mending": "修补",
   "simple_rpg_core.attribute.name.generic.max_mana": "最大魔力值",
   "simple_rpg_core.attribute.name.generic.mana_regain": "魔力恢复",
-  "simple_rpg_core.attribute.name.generic.mana_power": "法强"
+  "simple_rpg_core.attribute.name.generic.mana_power": "法强",
+  "simple_rpg_core.attribute.name.generic.mana_cost": "魔力消耗"
+
 }

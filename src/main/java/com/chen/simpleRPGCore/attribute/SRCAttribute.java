@@ -10,8 +10,14 @@ public class SRCAttribute extends RangedAttribute {
 
     public boolean isPercentage = false;
 
+    public boolean isReversal = false;
     public SRCAttribute setPercentage(boolean percentage) {
         isPercentage = percentage;
+        return this;
+    }
+
+    public SRCAttribute setReversal(boolean reversal) {
+        isReversal = reversal;
         return this;
     }
 }
