@@ -3,8 +3,8 @@ package com.chen.simpleRPGCore.utils;
 import net.minecraft.util.RandomSource;
 
 public class Util {
-    public static int toInt(double value, RandomSource randomSource){
+    public static int toInt(double value, RandomSource randomSource) {
         int intValue = (int) Math.floor(value);
-        return intValue+ ((randomSource.nextFloat()<(value - intValue))? 1:0);
+        return intValue + ((randomSource.nextFloat() < (value - intValue)) ? 1 : 0);
     }
 }

@@ -1,5 +1,6 @@
 package com.chen.simpleRPGCore;
 
+import com.chen.simpleRPGCore.attachmentType.SRCAttachmentTypes;
 import com.chen.simpleRPGCore.attribute.SRCAttributes;
 import com.chen.simpleRPGCore.common.DamageSourceExtraData;
 import com.chen.simpleRPGCore.config.ConfigDataHolder;
@@ -37,10 +38,11 @@ public class SimpleRPGCore
         modEventBus.addListener(this::commonSetup);
         CREATIVE_MODE_TABS.register(modEventBus);
         SRCAttributes.ATTRIBUTE_DEFERRED_REGISTER.register(modEventBus);
+        SRCAttachmentTypes.ATTACHMENT_TYPES.register(modEventBus);
         NeoForge.EVENT_BUS.register(this);
         modEventBus.addListener(this::addCreative);
 
-        modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+//        modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event)

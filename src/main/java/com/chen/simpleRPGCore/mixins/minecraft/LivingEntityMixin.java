@@ -2,12 +2,19 @@ package com.chen.simpleRPGCore.mixins.minecraft;
 
 import com.chen.simpleRPGCore.attribute.SRCAttributes;
 import com.chen.simpleRPGCore.common.DamageSourceExtraData;
-import com.chen.simpleRPGCore.mixinsAPI.minecraft.IDamageSourceMixin;
+import com.chen.simpleRPGCore.event.SRCEventFactory;
+import com.chen.simpleRPGCore.mixinsAPI.minecraft.IDamageSourceExtension;
+import com.chen.simpleRPGCore.mixinsAPI.minecraft.ILivingEntityMixinExtension;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.damagesource.DamageContainer;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -16,23 +23,46 @@ import javax.annotation.Nullable;
 import java.util.Stack;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin {
+public abstract class LivingEntityMixin extends Entity implements ILivingEntityMixinExtension {
 
-    @Shadow public abstract float getHealth();
+    public LivingEntityMixin(EntityType<?> pEntityType, Level pLevel) {
+        super(pEntityType, pLevel);
+    }
 
-    @Shadow @Nullable protected Stack<DamageContainer> damageContainers;
+    @Shadow
+    public abstract float getHealth();
 
-    @Inject(method = "actuallyHurt",at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setHealth(F)V"))
-    private void actuallyHurt(DamageSource damageSource, float pDamageAmount, CallbackInfo ci){
-        float actuallyHealthLost = Math.min(this.getHealth(),this.damageContainers.peek().getNewDamage());
+    @Shadow
+    @Nullable
+    protected Stack<DamageContainer> damageContainers;
 
-        LivingEntity livingEntity = (LivingEntity)(Object) this;
-        DamageSourceExtraData extraData = ((IDamageSourceMixin) damageSource).src$getExtraData();
+    @Shadow
+    public abstract void heal(float pHealAmount);
+
+    @Shadow
+    public abstract boolean hurt(@NotNull DamageSource pSource, float pAmount);
+
+    @Inject(method = "actuallyHurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setHealth(F)V"))
+    private void actuallyHurt(DamageSource damageSource, float pDamageAmount, CallbackInfo ci) {
+        float actuallyHealthLost = Math.min(this.getHealth(), this.damageContainers.peek().getNewDamage());
+
+        LivingEntity livingEntity = (LivingEntity) (Object) this;
+        DamageSourceExtraData extraData = ((IDamageSourceExtension) damageSource).src$getExtraData();
 
         float life_steal = (float) extraData.getAttributeOriginalHolder(SRCAttributes.LIFE_STEAL).getNew(0);
 
         if (damageSource.getEntity() instanceof LivingEntity living && extraData.isMeleeDamageToEntity(livingEntity)) {
             living.heal(actuallyHealthLost * life_steal);
+        }
+    }
+
+    @Unique
+    @Override
+    public void src$healBy(Entity healer, float amount) {
+        LivingEntity self = (LivingEntity) (Object) this;
+        if (healer instanceof LivingEntity living) {
+            float mending = healer == self ? 1 : (float) living.getAttributeValue(SRCAttributes.MENDING);
+            this.heal(SRCEventFactory.onLivingBeHeal(self, healer, amount * mending));
         }
     }
 }

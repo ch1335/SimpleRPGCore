@@ -3,6 +3,11 @@
   "simple_rpg_core.attribute.name.generic.critical_damage": "Critical Damage",
   "simple_rpg_core.attribute.name.generic.life_steal": "Life Steal",
   "simple_rpg_core.attribute.name.generic.armor_penetration": "Armor Penetration",
-  "simple_rpg_core.attribute.name.generic.mining_fortune" : "Mining Fortune",
-  "simple_rpg_core.attribute.name.generic.mob_looting" : "Looting"
+  "simple_rpg_core.attribute.name.generic.mining_fortune": "Mining Fortune",
+  "simple_rpg_core.attribute.name.generic.mob_looting": "Looting",
+  "simple_rpg_core.attribute.name.generic.heal_effect": "Heal Effect",
+  "simple_rpg_core.attribute.name.generic.mending": "Mending",
+  "simple_rpg_core.attribute.name.generic.max_mana": "Max Mana",
+  "simple_rpg_core.attribute.name.generic.mana_regain": "Mana Regain",
+  "simple_rpg_core.attribute.name.generic.mana_power": "Mana Power"
 }

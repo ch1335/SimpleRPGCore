@@ -3,6 +3,11 @@
   "simple_rpg_core.attribute.name.generic.critical_damage": "暴击伤害",
   "simple_rpg_core.attribute.name.generic.life_steal": "生命窃取",
   "simple_rpg_core.attribute.name.generic.armor_penetration": "护甲穿透",
-  "simple_rpg_core.attribute.name.generic.mining_fortune" : "挖掘幸运",
-  "simple_rpg_core.attribute.name.generic.mob_looting" : "抢夺等级"
+  "simple_rpg_core.attribute.name.generic.mining_fortune": "挖掘幸运",
+  "simple_rpg_core.attribute.name.generic.mob_looting": "抢夺等级",
+  "simple_rpg_core.attribute.name.generic.heal_effect": "治疗效率",
+  "simple_rpg_core.attribute.name.generic.mending": "修补",
+  "simple_rpg_core.attribute.name.generic.max_mana": "最大魔力值",
+  "simple_rpg_core.attribute.name.generic.mana_regain": "魔力恢复",
+  "simple_rpg_core.attribute.name.generic.mana_power": "法强"
 }

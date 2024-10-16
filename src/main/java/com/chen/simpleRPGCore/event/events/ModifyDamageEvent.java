@@ -1,7 +1,7 @@
 package com.chen.simpleRPGCore.event.events;
 
 import com.chen.simpleRPGCore.common.DamageSourceExtraData;
-import com.chen.simpleRPGCore.mixinsAPI.minecraft.IDamageSourceMixin;
+import com.chen.simpleRPGCore.mixinsAPI.minecraft.IDamageSourceExtension;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
@@ -14,7 +14,7 @@ public abstract class ModifyDamageEvent extends Event implements ICancellableEve
     public ModifyDamageEvent(DamageContainer damageContainer, LivingEntity livingEntity) {
         this.damageContainer = damageContainer;
         this.entity = livingEntity;
-        this.extraData = ((IDamageSourceMixin)damageContainer.getSource()).src$getExtraData();
+        this.extraData = ((IDamageSourceExtension)damageContainer.getSource()).src$getExtraData();
     }
 
     public DamageContainer getDamageContainer() {

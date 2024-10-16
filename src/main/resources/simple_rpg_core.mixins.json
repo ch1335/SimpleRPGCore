@@ -12,6 +12,7 @@
     "minecraft.PlayerMixin"
   ],
   "client": [
+    "minecraft.GuiMixin"
   ],
   "minVersion": "0.8"
 }

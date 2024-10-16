@@ -1,7 +1,7 @@
 package com.chen.simpleRPGCore.mixins.minecraft;
 
 import com.chen.simpleRPGCore.common.DamageSourceExtraData;
-import com.chen.simpleRPGCore.mixinsAPI.minecraft.IDamageSourceMixin;
+import com.chen.simpleRPGCore.mixinsAPI.minecraft.IDamageSourceExtension;
 import net.minecraft.core.Holder;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 
 @Mixin(DamageSource.class)
-public class DamageSourceMixin implements IDamageSourceMixin {
+public class DamageSourceMixin implements IDamageSourceExtension {
     @Unique
     private DamageSourceExtraData src$extraData;
     @Inject(method = "<init>(Lnet/minecraft/core/Holder;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/Vec3;)V", at = @At("RETURN"))
