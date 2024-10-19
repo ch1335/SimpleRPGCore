@@ -38,7 +38,7 @@ public class DamageSourceExtraData {
         if (entity instanceof LivingEntity livingEntity) {
             ExtraAttributes.attributes.forEach(attribute -> {
                 if (livingEntity.getAttributes().hasAttribute(attribute)) {
-                    builder.put(attribute.value(),new AttributeOriginalData(livingEntity.getAttributeValue(attribute)));
+                    builder.put(attribute.value(), new AttributeOriginalData(livingEntity.getAttributeValue(attribute)));
                 }
             });
         }
@@ -49,19 +49,21 @@ public class DamageSourceExtraData {
         attributeData = ImmutableMap.of();
     }
 
-    public AttributeOriginalData.AttributeOriginalDataHolder getAttributeOriginalHolder(Holder<Attribute> attribute){
-       return AttributeOriginalData.AttributeOriginalDataHolder.of(attributeData.get(attribute.value()));
+    public AttributeOriginalData.AttributeOriginalDataHolder getAttributeOriginalHolder(Holder<Attribute> attribute) {
+        return AttributeOriginalData.AttributeOriginalDataHolder.of(attributeData.get(attribute.value()));
     }
+
+    // Set damage to melee damage for an entity
     public void addMeleeDamageEntity(Entity entity) {
         meleeDamageEntities.add(entity.getId());
     }
 
-
+    // Set damage to sweeping damage for an entity
     public void addSweepingDamageEntity(Entity entity) {
         sweepingDamageEntities.add(entity.getId());
     }
 
-
+    // Set damage to critical damage for an entity
     public void addCriticalDamageEntity(Entity entity) {
         criticalDamageEntities.add(entity.getId());
     }
@@ -81,14 +83,15 @@ public class DamageSourceExtraData {
         return criticalDamageEntities.contains(entity.getId());
     }
 
+
     public void restToOriginal() {
         attributeData.values().forEach(AttributeOriginalData::restToOriginal);
     }
 
-    public static class ExtraAttributes{
+    public static class ExtraAttributes {
         public static Set<Holder<Attribute>> attributes = new HashSet<>();
 
-        public static void addAttributes(){
+        public static void addAttributes() {
             attributes.add(SRCAttributes.CRITICAL_CHANCE);
             attributes.add(SRCAttributes.CRITICAL_DAMAGE);
             attributes.add(SRCAttributes.LIFE_STEAL);
@@ -97,10 +100,12 @@ public class DamageSourceExtraData {
         }
     }
 
+    // set the damage by pass cooldown
     public void setBypassesCooldown(boolean bypassesCooldown) {
         this.bypassesCooldown = bypassesCooldown;
     }
 
+    // get if the damage by pass cooldown
     public boolean isBypassesCooldown() {
         return bypassesCooldown;
     }
