@@ -11,10 +11,11 @@ public abstract class ModifyDamageEvent extends Event implements ICancellableEve
     private final DamageContainer damageContainer;
     private final LivingEntity entity;
     private final DamageSourceExtraData extraData;
+
     public ModifyDamageEvent(DamageContainer damageContainer, LivingEntity livingEntity) {
         this.damageContainer = damageContainer;
         this.entity = livingEntity;
-        this.extraData = ((IDamageSourceExtension)damageContainer.getSource()).src$getExtraData();
+        this.extraData = ((IDamageSourceExtension) damageContainer.getSource()).src$getExtraData();
     }
 
     public DamageContainer getDamageContainer() {
@@ -29,14 +30,14 @@ public abstract class ModifyDamageEvent extends Event implements ICancellableEve
         return extraData;
     }
 
-    public static class BeforeCritical extends ModifyDamageEvent{
+    public static class BeforeCritical extends ModifyDamageEvent {
 
         public BeforeCritical(DamageContainer damageContainer, LivingEntity entity) {
             super(damageContainer, entity);
         }
     }
 
-    public static class AfterCritical extends ModifyDamageEvent{
+    public static class AfterCritical extends ModifyDamageEvent {
 
         public AfterCritical(DamageContainer damageContainer, LivingEntity entity) {
             super(damageContainer, entity);

@@ -12,6 +12,6 @@ public class SRCAttachmentTypes {
     public static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, SimpleRPGCore.MODID);
 
     public static final Supplier<AttachmentType<PlayerExtraData.DataHolder>> PLAYER_DATA = ATTACHMENT_TYPES.register(
-            "player_data", () -> AttachmentType.serializable((holder)->new PlayerExtraData.DataHolder(0)).build()
+            "player_data", () -> AttachmentType.serializable((holder) -> new PlayerExtraData.DataHolder(0)).build()
     );
 }

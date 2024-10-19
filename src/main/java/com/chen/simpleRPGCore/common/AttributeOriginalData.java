@@ -34,6 +34,7 @@ public class AttributeOriginalData {
         public double getOriginal(double def) {
             return data != null ? data.getOriginal() : def;
         }
+
         //get new amount. if Attribute don't exist then return def
         public double getNew(double def) {
             return data != null ? data.newAmount : def;

@@ -8,7 +8,8 @@ import net.neoforged.neoforge.common.damagesource.DamageContainer;
 public class ModPreCriticalEvent extends Event implements ICancellableEvent {
     private final DamageContainer damageContainer;
     private final LivingEntity entity;
-    public ModPreCriticalEvent(DamageContainer damageContainer, LivingEntity entity){
+
+    public ModPreCriticalEvent(DamageContainer damageContainer, LivingEntity entity) {
         this.damageContainer = damageContainer;
         this.entity = entity;
     }

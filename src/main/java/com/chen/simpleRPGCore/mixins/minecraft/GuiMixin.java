@@ -14,16 +14,19 @@ import javax.annotation.Nullable;
 
 @Mixin(Gui.class)
 public abstract class GuiMixin {
-    @Shadow @Nullable protected abstract Player getCameraPlayer();
+    @Shadow
+    private int lastHealth;
+    @Shadow
+    private long healthBlinkTime;
+    @Shadow
+    private int tickCount;
 
-    @Shadow private int lastHealth;
+    @Shadow
+    @Nullable
+    protected abstract Player getCameraPlayer();
 
-    @Shadow private long healthBlinkTime;
-
-    @Shadow private int tickCount;
-
-    @Inject(method = "renderHealthLevel",at = @At("HEAD"))
-    private void renderHealthLevel(GuiGraphics p_283143_, CallbackInfo ci){
+    @Inject(method = "renderHealthLevel", at = @At("HEAD"))
+    private void renderHealthLevel(GuiGraphics p_283143_, CallbackInfo ci) {
         Player player = this.getCameraPlayer();
         if (player != null) {
             int i = Mth.ceil(player.getHealth());

@@ -7,5 +7,7 @@ public interface IPlayerExtraData {
 
     void setMana(float mana);
 
+    boolean costMana(float amount, boolean absolute, String reason);
+
     PlayerExtraData.DataHolder getDataHolder();
 }

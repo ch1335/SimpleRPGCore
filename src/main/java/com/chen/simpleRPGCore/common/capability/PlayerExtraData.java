@@ -29,6 +29,10 @@ public class PlayerExtraData implements IPlayerExtraData {
         getDataHolder().mana = mana;
     }
 
+    public boolean costMana(float amount,String reason){
+       return costMana(amount,false,reason);
+    }
+
     public boolean costMana(float amount, boolean absolute, String reason) {
         float finalCost = SRCEventFactory.onPlayerCostMana(player, amount * (absolute ? 1 : (float) player.getAttributeValue(SRCAttributes.MANA_COST)), reason);
         if (finalCost <= getMana()) {
@@ -63,7 +67,7 @@ public class PlayerExtraData implements IPlayerExtraData {
         }
     }
 
-    private void sycMana() {
+    public void sycMana() {
         if (player instanceof ServerPlayer serverPlayer) {
             PlayerExtraDataSycPack.SycMana(serverPlayer);
         }

@@ -65,6 +65,7 @@ configurations {
 
 dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
+    implementation fileTree(dir:'libs')
 }
 
 tasks.withType(ProcessResources).configureEach {

@@ -19,11 +19,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class DamageSourceMixin implements IDamageSourceExtension {
     @Unique
     private DamageSourceExtraData src$extraData;
+
     @Inject(method = "<init>(Lnet/minecraft/core/Holder;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/Vec3;)V", at = @At("RETURN"))
     private void init(Holder<DamageType> pType, Entity pDirectEntity, Entity pCausingEntity, Vec3 pDamageSourcePosition, CallbackInfo ci) {
         if (pCausingEntity instanceof LivingEntity livingEntity) {
             src$extraData = new DamageSourceExtraData(livingEntity);
-        }else {
+        } else {
             src$extraData = new DamageSourceExtraData();
         }
     }

@@ -15,11 +15,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(EnchantmentHelper.class)
 public class EnchantmentHelperMixin {
 
-    @Inject(method = "getEnchantmentLevel",at = @At("RETURN"), cancellable = true)
-    private static void getEnchantmentLevel(Holder<Enchantment> pEnchantment, LivingEntity pEntity, CallbackInfoReturnable<Integer> cir){
+    @Inject(method = "getEnchantmentLevel", at = @At("RETURN"), cancellable = true)
+    private static void getEnchantmentLevel(Holder<Enchantment> pEnchantment, LivingEntity pEntity, CallbackInfoReturnable<Integer> cir) {
         if (pEnchantment.getKey() == Enchantments.LOOTING && pEntity.getAttributes().hasAttribute(SRCAttributes.MOB_LOOTING)) {
             double value = pEntity.getAttributeValue(SRCAttributes.MOB_LOOTING);
-            cir.setReturnValue(cir.getReturnValue() + Util.toInt(value,pEntity.getRandom()));
+            cir.setReturnValue(cir.getReturnValue() + Util.toInt(value, pEntity.getRandom()));
         }
     }
 }

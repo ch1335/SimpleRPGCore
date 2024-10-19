@@ -1,0 +1,13 @@
+{
+  "required": false,
+  "package": "com.chen.simpleRPGCore.mixins",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "apothicAttributes.AttributeEventsMixin",
+    "apothicAttributes.AttributesGuiMixin"
+  ],
+  "client": [
+    "minecraft.GuiMixin"
+  ],
+  "minVersion": "0.8"
+}

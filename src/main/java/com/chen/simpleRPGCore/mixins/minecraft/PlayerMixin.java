@@ -14,15 +14,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Player.class)
 public class PlayerMixin {
-    @Inject(method = "attack",at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
-    public void MeleeAttack(Entity pTarget, CallbackInfo ci, @Local(ordinal = 0) LocalRef<DamageSource> damageSourceLocalRef){
+    @Inject(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
+    public void MeleeAttack(Entity pTarget, CallbackInfo ci, @Local(ordinal = 0) LocalRef<DamageSource> damageSourceLocalRef) {
         IDamageSourceExtension iDamageSource = (IDamageSourceExtension) damageSourceLocalRef.get();
         iDamageSource.src$getExtraData().addMeleeDamageEntity(pTarget);
         damageSourceLocalRef.set((DamageSource) iDamageSource);
     }
 
-    @Inject(method = "attack",at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
-    public void SweepingAttack(Entity pTarget, CallbackInfo ci, @Local(ordinal = 0) LocalRef<DamageSource> damageSourceLocalRef,@Local(ordinal = 0) LivingEntity livingEntity){
+    @Inject(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
+    public void SweepingAttack(Entity pTarget, CallbackInfo ci, @Local(ordinal = 0) LocalRef<DamageSource> damageSourceLocalRef, @Local(ordinal = 0) LivingEntity livingEntity) {
         IDamageSourceExtension iDamageSource = (IDamageSourceExtension) damageSourceLocalRef.get();
         iDamageSource.src$getExtraData().addMeleeDamageEntity(livingEntity);
         iDamageSource.src$getExtraData().addSweepingDamageEntity(livingEntity);

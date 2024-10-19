@@ -25,16 +25,16 @@ import java.util.Stack;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements ILivingEntityMixinExtension {
 
+    @Shadow
+    @Nullable
+    protected Stack<DamageContainer> damageContainers;
+
     public LivingEntityMixin(EntityType<?> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
     @Shadow
     public abstract float getHealth();
-
-    @Shadow
-    @Nullable
-    protected Stack<DamageContainer> damageContainers;
 
     @Shadow
     public abstract void heal(float pHealAmount);
@@ -52,8 +52,12 @@ public abstract class LivingEntityMixin extends Entity implements ILivingEntityM
         float life_steal = (float) extraData.getAttributeOriginalHolder(SRCAttributes.LIFE_STEAL).getNew(0);
 
         if (damageSource.getEntity() instanceof LivingEntity living && extraData.isMeleeDamageToEntity(livingEntity)) {
-            living.heal(actuallyHealthLost * life_steal);
+            float healAmount = actuallyHealthLost * life_steal;
+            living.heal(healAmount);
         }
+
+
+
     }
 
     @Unique

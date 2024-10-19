@@ -10,6 +10,10 @@
   "simple_rpg_core.attribute.name.generic.max_mana": "Max Mana",
   "simple_rpg_core.attribute.name.generic.mana_regain": "Mana Regain",
   "simple_rpg_core.attribute.name.generic.mana_power": "Mana Power",
-  "simple_rpg_core.attribute.name.generic.mana_cost": "Mana Cost"
+  "simple_rpg_core.attribute.name.generic.mana_cost": "Mana Cost",
+  "simple_rpg_core.attribute.name.generic.over_heal": "Over Heal",
+  "simple_rpg_core.attribute.name.generic.max_over_heal_amount": "Max Over Heal Amount",
+  "simple_rpg_core.attribute.fix": "This attribute has been redesigned by SimpleRPGCore:",
+  "simple_rpg_core.attribute.fix.over_heal": "When the amount of treatment overflows, the overflowing amount of treatment will be converted into damage absorption based on this attribute."
 
 }

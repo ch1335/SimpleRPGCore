@@ -10,6 +10,9 @@
   "simple_rpg_core.attribute.name.generic.max_mana": "最大魔力值",
   "simple_rpg_core.attribute.name.generic.mana_regain": "魔力恢复",
   "simple_rpg_core.attribute.name.generic.mana_power": "法强",
-  "simple_rpg_core.attribute.name.generic.mana_cost": "魔力消耗"
-
+  "simple_rpg_core.attribute.name.generic.mana_cost": "魔力消耗",
+  "simple_rpg_core.attribute.name.generic.over_heal": "过量治疗",
+  "simple_rpg_core.attribute.name.generic.max_over_heal_amount": "最大过量治疗量",
+  "simple_rpg_core.attribute.fix": "这个属性已经被SimpleRPGCore重新设计:",
+  "simple_rpg_core.attribute.fix.over_heal": "当治疗量溢出时，溢出的治疗量会基于这个属性转换为伤害吸收。"
 }

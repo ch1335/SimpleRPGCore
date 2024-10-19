@@ -7,9 +7,11 @@
     "minecraft.CombatRulesMixin",
     "minecraft.DamageSourceMixin",
     "minecraft.EnchantmentHelperMixin",
+    "minecraft.FoodDataMixin",
     "minecraft.ItemStackMixin",
     "minecraft.LivingEntityMixin",
-    "minecraft.PlayerMixin"
+    "minecraft.PlayerMixin",
+    "minecraft.RegenerationMobEffectMixin"
   ],
   "client": [
     "minecraft.GuiMixin"

@@ -13,7 +13,7 @@ public class AddDamageSourceExtraAttributesEvent extends Event {
         this.attributes = attributes;
     }
 
-    public void add(Holder<Attribute> attributeHolder){
+    public void add(Holder<Attribute> attributeHolder) {
         attributes.add(attributeHolder);
     }
 }
