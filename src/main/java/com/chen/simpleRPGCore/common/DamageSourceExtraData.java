@@ -25,6 +25,7 @@ public class DamageSourceExtraData {
 
     public boolean bypassesCooldown = false;
 
+
     public int originalInvulnerabilityTicksAfterAttack = 20;
     //this is paper for kubejs. don't use this in mod
     public Optional<Object> customDataHolder = Optional.empty();
