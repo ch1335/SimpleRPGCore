@@ -8,7 +8,9 @@ import com.chen.simpleRPGCore.mixinsAPI.minecraft.ILivingEntityMixinExtension;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.damagesource.DamageContainer;
 import org.jetbrains.annotations.NotNull;
@@ -17,9 +19,13 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import javax.annotation.Nullable;
+import java.util.Map;
 import java.util.Stack;
 
 @Mixin(LivingEntity.class)
@@ -61,12 +67,21 @@ public abstract class LivingEntityMixin extends Entity implements ILivingEntityM
     }
 
     @Unique
-    @Override
     public void src$healBy(Entity healer, float amount) {
         LivingEntity self = (LivingEntity) (Object) this;
         if (healer instanceof LivingEntity living) {
             float mending = healer == self ? 1 : (float) living.getAttributeValue(SRCAttributes.MENDING);
             this.heal(SRCEventFactory.onLivingBeHeal(self, healer, amount * mending));
         }
+    }
+
+    @ModifyArgs(method = "collectEquipmentChanges",at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;forEachModifier(Lnet/minecraft/world/entity/EquipmentSlot;Ljava/util/function/BiConsumer;)V",ordinal = 0))
+    private void disableVanilla(Args args){
+        args.set(1,EMPTY_CONSUMER);
+    }
+
+    @Inject(method = "collectEquipmentChanges",at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;forEachModifier(Lnet/minecraft/world/entity/EquipmentSlot;Ljava/util/function/BiConsumer;)V",ordinal = 0))
+    private void forEachModifier1(CallbackInfoReturnable<Map<EquipmentSlot, ItemStack>> cir){
+
     }
 }
