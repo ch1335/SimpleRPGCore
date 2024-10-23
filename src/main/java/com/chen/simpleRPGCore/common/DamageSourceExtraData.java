@@ -29,6 +29,10 @@ public class DamageSourceExtraData {
     //this is paper for kubejs. don't use this in mod
     public Optional<Object> customDataHolder = Optional.empty();
 
+    public void setCustomData(Object customDataHolder) {
+        this.customDataHolder = Optional.of(customDataHolder);
+    }
+
     public DamageSourceExtraData(Entity entity) {
         ImmutableMap.Builder<Attribute, AttributeOriginalData> builder = ImmutableMap.builder();
         if (entity instanceof LivingEntity livingEntity) {
@@ -43,10 +47,6 @@ public class DamageSourceExtraData {
 
     public DamageSourceExtraData() {
         attributeData = ImmutableMap.of();
-    }
-
-    public void setCustomData(Object customDataHolder) {
-        this.customDataHolder = Optional.of(customDataHolder);
     }
 
     public AttributeOriginalData.AttributeOriginalDataHolder getAttributeOriginalHolder(Holder<Attribute> attribute) {
@@ -88,16 +88,6 @@ public class DamageSourceExtraData {
         attributeData.values().forEach(AttributeOriginalData::restToOriginal);
     }
 
-    // get if the damage by pass cooldown
-    public boolean isBypassesCooldown() {
-        return bypassesCooldown;
-    }
-
-    // set the damage by pass cooldown
-    public void setBypassesCooldown(boolean bypassesCooldown) {
-        this.bypassesCooldown = bypassesCooldown;
-    }
-
     public static class ExtraAttributes {
         public static Set<Holder<Attribute>> attributes = new HashSet<>();
 
@@ -108,5 +98,15 @@ public class DamageSourceExtraData {
             attributes.add(SRCAttributes.ARMOR_PENETRATION);
             SRCEventFactory.addDamageSourceExtraAttributes(attributes);
         }
+    }
+
+    // set the damage by pass cooldown
+    public void setBypassesCooldown(boolean bypassesCooldown) {
+        this.bypassesCooldown = bypassesCooldown;
+    }
+
+    // get if the damage by pass cooldown
+    public boolean isBypassesCooldown() {
+        return bypassesCooldown;
     }
 }
