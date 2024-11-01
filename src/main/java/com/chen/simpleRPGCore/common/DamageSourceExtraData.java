@@ -22,9 +22,22 @@ public class DamageSourceExtraData {
     private final IntArraySet criticalDamageEntities = new IntArraySet();
 
     private final ImmutableMap<Attribute, AttributeOriginalData> attributeData;
+    private final OriginalState originalState;
 
+    //set the damage weather bypass Cooldown
     public boolean bypassesCooldown = false;
 
+    //whether this damage can do critical damage
+    private boolean canCritical = true;
+
+    //whether this damage can do life steal
+    private boolean canDoLifeSteal = true;
+
+    //The value of damage that cannot do critical hits
+    private float unCriticalAbleDamage = 0;
+
+    //Critical damage already caused
+    public float criticalDamage = 0;
 
     public int originalInvulnerabilityTicksAfterAttack = 20;
     //this is paper for kubejs. don't use this in mod
@@ -35,6 +48,11 @@ public class DamageSourceExtraData {
     }
 
     public DamageSourceExtraData(Entity entity) {
+        this(entity, OriginalState.DEFAULT);
+    }
+
+    public DamageSourceExtraData(Entity entity, OriginalState originalState) {
+        this.originalState = originalState;
         ImmutableMap.Builder<Attribute, AttributeOriginalData> builder = ImmutableMap.builder();
         if (entity instanceof LivingEntity livingEntity) {
             ExtraAttributes.attributes.forEach(attribute -> {
@@ -46,8 +64,13 @@ public class DamageSourceExtraData {
         attributeData = builder.build();
     }
 
-    public DamageSourceExtraData() {
+    public DamageSourceExtraData(OriginalState originalState) {
+        this.originalState = originalState;
         attributeData = ImmutableMap.of();
+    }
+
+    public DamageSourceExtraData() {
+        this(OriginalState.DEFAULT);
     }
 
     public AttributeOriginalData.AttributeOriginalDataHolder getAttributeOriginalHolder(Holder<Attribute> attribute) {
@@ -87,6 +110,32 @@ public class DamageSourceExtraData {
 
     public void restToOriginal() {
         attributeData.values().forEach(AttributeOriginalData::restToOriginal);
+        canCritical = originalState.canCritical;
+        unCriticalAbleDamage = originalState.unCriticalAbleDamage;
+        canDoLifeSteal = originalState.canDoLifeSteal;
+        bypassesCooldown = originalState.bypassesCooldown;
+        criticalDamage = 0;
+    }
+
+    public boolean isCanCritical() {
+        return canCritical;
+    }
+
+    public DamageSourceExtraData setCanCritical(boolean canCritical) {
+        this.canCritical = canCritical;
+        return this;
+    }
+
+    public boolean isCanDoLifeSteal() {
+        return canDoLifeSteal;
+    }
+
+    public void setCanDoLifeSteal(boolean canDoLifeSteal) {
+        this.canDoLifeSteal = canDoLifeSteal;
+    }
+
+    public float getUnCriticalAbleDamage() {
+        return unCriticalAbleDamage;
     }
 
     public static class ExtraAttributes {
@@ -109,5 +158,73 @@ public class DamageSourceExtraData {
     // get if the damage by pass cooldown
     public boolean isBypassesCooldown() {
         return bypassesCooldown;
+    }
+
+    public DamageSourceExtraData addUnCriticalAbleDamage(float amount) {
+        unCriticalAbleDamage += amount;
+        return this;
+    }
+
+    public static class OriginalState {
+        public static final OriginalState DEFAULT = new OriginalState(new Builder());
+
+        public final boolean bypassesCooldown;
+        public final boolean canCritical;
+        public final boolean canDoLifeSteal;
+        public final float unCriticalAbleDamage;
+
+        public OriginalState(Builder builder) {
+            bypassesCooldown = builder.bypassesCooldown;
+            canCritical = builder.canCritical;
+            canDoLifeSteal = builder.canDoLifeSteal;
+            unCriticalAbleDamage = builder.unCriticalAbleDamage;
+        }
+
+        public static class Builder {
+            private boolean bypassesCooldown = false;
+            private boolean canCritical = true;
+            private boolean canDoLifeSteal = true;
+            private float unCriticalAbleDamage = 0;
+
+            public OriginalState build() {
+                return new OriginalState(this);
+            }
+
+            public boolean isBypassesCooldown() {
+                return bypassesCooldown;
+            }
+
+            public Builder setBypassesCooldown(boolean bypassesCooldown) {
+                this.bypassesCooldown = bypassesCooldown;
+                return this;
+            }
+
+            public boolean isCanCritical() {
+                return canCritical;
+            }
+
+            public Builder setCanCritical(boolean canCritical) {
+                this.canCritical = canCritical;
+                return this;
+            }
+
+            public boolean isCanDoLifeSteal() {
+                return canDoLifeSteal;
+            }
+
+            public Builder setCanDoLifeSteal(boolean canDoLifeSteal) {
+                this.canDoLifeSteal = canDoLifeSteal;
+                return this;
+            }
+
+            public float getUnCriticalAbleDamage() {
+                return unCriticalAbleDamage;
+            }
+
+            public Builder setUnCriticalAbleDamage(float unCriticalAbleDamage) {
+                this.unCriticalAbleDamage = unCriticalAbleDamage;
+                return this;
+            }
+        }
     }
 }

@@ -42,15 +42,15 @@ public class EventHandler {
             DamageSourceExtraData extraData = ((IDamageSourceExtension) container.getSource()).src$getExtraData();
 
 
-
             if (SRCEventFactory.modifyDamageBeforeCritical(container, livingEntity)) event.setCanceled(true);
 
             float criticalChance = (float) extraData.getAttributeOriginalHolder(SRCAttributes.CRITICAL_CHANCE).getNew(0);
 
-            if (livingEntity.getRandom().nextFloat() <= criticalChance && SRCEventFactory.modPreCritical(container, livingEntity)) {
-                float criticalDamage = (float) extraData.getAttributeOriginalHolder(SRCAttributes.CRITICAL_DAMAGE).getNew(1);
+            if (extraData.isCanCritical() && livingEntity.getRandom().nextFloat() <= criticalChance && SRCEventFactory.modPreCritical(container, livingEntity)) {
+                float criticalDamage = container.getNewDamage() * (float) extraData.getAttributeOriginalHolder(SRCAttributes.CRITICAL_DAMAGE).getNew(1);
                 extraData.addCriticalDamageEntity(livingEntity);
-                container.setNewDamage(container.getNewDamage() * criticalDamage);
+                container.setNewDamage(criticalDamage);
+                extraData.criticalDamage = criticalDamage;
             }
 
             if (extraData.isBypassesCooldown()) {
@@ -59,6 +59,8 @@ public class EventHandler {
             }
 
             if (SRCEventFactory.modifyDamageAfterCritical(container, livingEntity)) event.setCanceled(true);
+
+            container.setNewDamage(container.getNewDamage() + extraData.getUnCriticalAbleDamage());
         }
 
         @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -87,10 +89,9 @@ public class EventHandler {
                 }
             }
 
-            if (livingEntity.getAbsorptionAmount()>0 && livingEntity.getAbsorptionAmount() < livingEntity.getAttributeValue(SRCAttributes.MAX_OVER_HEAL_AMOUNT)) {
+            if (livingEntity.getAbsorptionAmount() > 0 && livingEntity.getAbsorptionAmount() < livingEntity.getAttributeValue(SRCAttributes.MAX_OVER_HEAL_AMOUNT)) {
                 livingEntity.getAttributes().getInstance(Attributes.MAX_ABSORPTION).removeModifier(ILivingEntityMixinExtension.OVER_HEAL);
                 livingEntity.getAttributes().getInstance(Attributes.MAX_ABSORPTION).addTransientModifier(new AttributeModifier(ILivingEntityMixinExtension.OVER_HEAL, livingEntity.getAbsorptionAmount(), AttributeModifier.Operation.ADD_VALUE));
-
             }
         }
 

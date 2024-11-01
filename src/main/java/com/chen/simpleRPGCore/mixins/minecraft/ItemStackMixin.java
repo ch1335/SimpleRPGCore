@@ -18,34 +18,4 @@ import java.util.function.Consumer;
 @Mixin(ItemStack.class)
 public class ItemStackMixin {
 
-    @Inject(method = "addModifierTooltip", at = @At("HEAD"), cancellable = true)
-    private void addModifierTooltip(Consumer<Component> pTooltipAdder, Player pPlayer, Holder<Attribute> pAttribute, AttributeModifier pModifier, CallbackInfo ci) {
-        if (pAttribute.value() instanceof SRCAttribute attribute && attribute.isPercentage) {
-            double d0 = pModifier.amount();
-
-            double d1 = d0 * 100;
-
-            if (d0 > 0.0) {
-                pTooltipAdder.accept(
-                        Component.translatable(
-                                        "attribute.modifier.plus." + pModifier.operation().id(),
-                                        ItemAttributeModifiers.ATTRIBUTE_MODIFIER_FORMAT.format(d1) + "%",
-                                        Component.translatable(pAttribute.value().getDescriptionId())
-                                )
-                                .withStyle(pAttribute.value().getStyle(true))
-                );
-            } else if (d0 < 0.0) {
-                pTooltipAdder.accept(
-                        Component.translatable(
-                                        "attribute.modifier.take." + pModifier.operation().id(),
-                                        ItemAttributeModifiers.ATTRIBUTE_MODIFIER_FORMAT.format(-d1) + "%",
-                                        Component.translatable(pAttribute.value().getDescriptionId())
-                                )
-                                .withStyle(pAttribute.value().getStyle(false))
-                );
-            }
-
-            ci.cancel();
-        }
-    }
 }

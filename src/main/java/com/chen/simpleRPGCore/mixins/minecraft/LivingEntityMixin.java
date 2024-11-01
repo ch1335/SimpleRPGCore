@@ -49,15 +49,12 @@ public abstract class LivingEntityMixin extends Entity implements ILivingEntityM
         LivingEntity livingEntity = (LivingEntity) (Object) this;
         DamageSourceExtraData extraData = ((IDamageSourceExtension) damageSource).src$getExtraData();
 
-        float life_steal = (float) extraData.getAttributeOriginalHolder(SRCAttributes.LIFE_STEAL).getNew(0);
+        float life_steal = extraData.isCanDoLifeSteal() ? (float) extraData.getAttributeOriginalHolder(SRCAttributes.LIFE_STEAL).getNew(0) : 0;
 
-        if (damageSource.getEntity() instanceof LivingEntity living && extraData.isMeleeDamageToEntity(livingEntity)) {
+        if (life_steal > 0 && damageSource.getEntity() instanceof LivingEntity living && extraData.isMeleeDamageToEntity(livingEntity)) {
             float healAmount = actuallyHealthLost * life_steal;
             living.heal(healAmount);
         }
-
-
-
     }
 
     @Unique

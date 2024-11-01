@@ -4,6 +4,7 @@ import com.chen.simpleRPGCore.SimpleRPGCore;
 import dev.shadowsoffire.apothic_attributes.api.ALObjects;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.neoforged.neoforge.common.PercentageAttribute;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -24,21 +25,21 @@ public class SRCAttributes {
 
     public static final DeferredHolder<Attribute, Attribute> OVER_HEAL;
 
-    public static final DeferredHolder<Attribute, Attribute> MINING_FORTUNE = ATTRIBUTE_DEFERRED_REGISTER.register("mining_fortune", () -> new SRCAttribute(makeDescriptionId("mining_fortune"), 0, 0, 114514).setSyncable(true));
+    public static final DeferredHolder<Attribute, Attribute> MINING_FORTUNE = ATTRIBUTE_DEFERRED_REGISTER.register("mining_fortune", () -> new RangedAttribute(makeDescriptionId("mining_fortune"), 0, 0, 114514).setSyncable(true));
 
-    public static final DeferredHolder<Attribute, Attribute> MOB_LOOTING = ATTRIBUTE_DEFERRED_REGISTER.register("mob_looting", () -> new SRCAttribute(makeDescriptionId("mob_looting"), 0, 0, 114514).setSyncable(true));
+    public static final DeferredHolder<Attribute, Attribute> MOB_LOOTING = ATTRIBUTE_DEFERRED_REGISTER.register("mob_looting", () -> new RangedAttribute(makeDescriptionId("mob_looting"), 0, 0, 114514).setSyncable(true));
 
-    public static final DeferredHolder<Attribute, Attribute> MENDING = ATTRIBUTE_DEFERRED_REGISTER.register("mending", () -> new SRCAttribute(makeDescriptionId("mending"), 1, 0, 114514).setPercentage(true).setSyncable(true));
+    public static final DeferredHolder<Attribute, Attribute> MENDING = ATTRIBUTE_DEFERRED_REGISTER.register("mending", () -> new PercentageAttribute(makeDescriptionId("mending"), 1, 0, 114514).setSyncable(true));
 
-    public static final DeferredHolder<Attribute, Attribute> MAX_MANA = ATTRIBUTE_DEFERRED_REGISTER.register("max_mana", () -> new SRCAttribute(makeDescriptionId("max_mana"), 100, 0, 114514).setSyncable(true));
+    public static final DeferredHolder<Attribute, Attribute> MAX_MANA = ATTRIBUTE_DEFERRED_REGISTER.register("max_mana", () -> new RangedAttribute(makeDescriptionId("max_mana"), 100, 0, 114514).setSyncable(true));
 
     public static final DeferredHolder<Attribute, Attribute> MANA_REGAIN = ATTRIBUTE_DEFERRED_REGISTER.register("mana_regain", () -> new PercentageAttribute(makeDescriptionId("mana_regain"), 1, 0, 114514).setSyncable(true));
 
-    public static final DeferredHolder<Attribute, Attribute> MANA_POWER = ATTRIBUTE_DEFERRED_REGISTER.register("mana_power", () -> new SRCAttribute(makeDescriptionId("mana_power"), 0, 0, 114514).setSyncable(true));
+    public static final DeferredHolder<Attribute, Attribute> MANA_POWER = ATTRIBUTE_DEFERRED_REGISTER.register("mana_power", () -> new RangedAttribute(makeDescriptionId("mana_power"), 0, 0, 114514).setSyncable(true));
 
     public static final DeferredHolder<Attribute, Attribute> MANA_COST = ATTRIBUTE_DEFERRED_REGISTER.register("mana_cost", () -> new PercentageAttribute(makeDescriptionId("mana_cost"), 1, 0.1, 114514).setSyncable(true).setSentiment(Attribute.Sentiment.NEGATIVE));
 
-    public static final DeferredHolder<Attribute, Attribute> MAX_OVER_HEAL_AMOUNT = ATTRIBUTE_DEFERRED_REGISTER.register("max_over_heal_amount", () -> new SRCAttribute(makeDescriptionId("max_over_heal_amount"), 4, 0, 114514).setSyncable(true));
+    public static final DeferredHolder<Attribute, Attribute> MAX_OVER_HEAL_AMOUNT = ATTRIBUTE_DEFERRED_REGISTER.register("max_over_heal_amount", () -> new RangedAttribute(makeDescriptionId("max_over_heal_amount"), 4, 0, 114514).setSyncable(true));
 
     static {
         if (SimpleRPGCore.apothicAttributesLoaded) {
@@ -49,12 +50,12 @@ public class SRCAttributes {
             HEAL_EFFECT = (DeferredHolder<Attribute, Attribute>) ALObjects.Attributes.HEALING_RECEIVED;
             OVER_HEAL = (DeferredHolder<Attribute, Attribute>) ALObjects.Attributes.OVERHEAL;
         } else {
-            CRITICAL_CHANCE = ATTRIBUTE_DEFERRED_REGISTER.register("critical_chance", () -> new SRCAttribute(makeDescriptionId("critical_chance"), 0, 0, 1).setPercentage(true).setSyncable(true));
-            CRITICAL_DAMAGE = ATTRIBUTE_DEFERRED_REGISTER.register("critical_damage", () -> new SRCAttribute(makeDescriptionId("critical_damage"), 1.5, 1, 114514).setPercentage(true).setSyncable(true));
-            LIFE_STEAL = ATTRIBUTE_DEFERRED_REGISTER.register("life_steal", () -> new SRCAttribute(makeDescriptionId("life_steal"), 0, 0, 114514).setPercentage(true).setSyncable(true));
-            ARMOR_PENETRATION = ATTRIBUTE_DEFERRED_REGISTER.register("armor_penetration", () -> new SRCAttribute(makeDescriptionId("armor_penetration"), 0, 0, 114514).setSyncable(true));
-            HEAL_EFFECT = ATTRIBUTE_DEFERRED_REGISTER.register("heal_effect", () -> new SRCAttribute(makeDescriptionId("heal_effect"), 1, 0, 114514).setPercentage(true).setSyncable(true));
-            OVER_HEAL = ATTRIBUTE_DEFERRED_REGISTER.register("over_heal", () -> new SRCAttribute(makeDescriptionId("over_heal"), 1, 0.1, 114514).setPercentage(true).setSyncable(true).setSentiment(Attribute.Sentiment.NEGATIVE));
+            CRITICAL_CHANCE = ATTRIBUTE_DEFERRED_REGISTER.register("critical_chance", () -> new PercentageAttribute(makeDescriptionId("critical_chance"), 0, 0, 1).setSyncable(true));
+            CRITICAL_DAMAGE = ATTRIBUTE_DEFERRED_REGISTER.register("critical_damage", () -> new PercentageAttribute(makeDescriptionId("critical_damage"), 1.5, 1, 114514).setSyncable(true));
+            LIFE_STEAL = ATTRIBUTE_DEFERRED_REGISTER.register("life_steal", () -> new PercentageAttribute(makeDescriptionId("life_steal"), 0, 0, 114514).setSyncable(true));
+            ARMOR_PENETRATION = ATTRIBUTE_DEFERRED_REGISTER.register("armor_penetration", () -> new RangedAttribute(makeDescriptionId("armor_penetration"), 0, 0, 114514).setSyncable(true));
+            HEAL_EFFECT = ATTRIBUTE_DEFERRED_REGISTER.register("heal_effect", () -> new PercentageAttribute(makeDescriptionId("heal_effect"), 1, 0, 114514).setSyncable(true));
+            OVER_HEAL = ATTRIBUTE_DEFERRED_REGISTER.register("over_heal", () -> new PercentageAttribute(makeDescriptionId("over_heal"), 1, 0.1, 114514).setSyncable(true).setSentiment(Attribute.Sentiment.NEGATIVE));
         }
     }
 

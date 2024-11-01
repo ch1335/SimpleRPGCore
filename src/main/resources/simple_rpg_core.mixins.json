@@ -1,20 +1,20 @@
 {
   "required": true,
-  "package": "com.chen.simpleRPGCore.mixins",
+  "package": "com.chen.simpleRPGCore.mixins.minecraft",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "minecraft.ApplyBonusCountMixin",
-    "minecraft.CombatRulesMixin",
-    "minecraft.DamageSourceMixin",
-    "minecraft.EnchantmentHelperMixin",
-    "minecraft.FoodDataMixin",
-    "minecraft.ItemStackMixin",
-    "minecraft.LivingEntityMixin",
-    "minecraft.PlayerMixin",
-    "minecraft.RegenerationMobEffectMixin"
+    "ApplyBonusCountMixin",
+    "CombatRulesMixin",
+    "DamageSourceMixin",
+    "EnchantmentHelperMixin",
+    "FoodDataMixin",
+    "ItemStackMixin",
+    "LivingEntityMixin",
+    "PlayerMixin",
+    "RegenerationMobEffectMixin"
   ],
   "client": [
-    "minecraft.GuiMixin"
+    "GuiMixin"
   ],
   "minVersion": "0.8"
 }
