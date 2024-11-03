@@ -8,6 +8,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.damagesource.DamageContainer;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
@@ -34,7 +35,7 @@ public class SRCEventFactory {
         return event.isCanceled() ? 0 : event.getAmount();
     }
 
-    public static float onPlayerCostMana(Player player, float amount, String reason) {
+    public static float onPlayerCostMana(Player player, float amount,@Nullable Object reason) {
         PlayerCostManaEvent event = NeoForge.EVENT_BUS.post(new PlayerCostManaEvent(player, amount, reason));
         return event.isCanceled() ? 0 : event.getAmount();
     }

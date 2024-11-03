@@ -1,0 +1,12 @@
+{
+  "required": false,
+  "package": "com.chen.simpleRPGCore.mixins.ironsSpellBooks",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "AbstractSpellMixin",
+    "MagicDataMixin"
+  ],
+  "client": [
+  ],
+  "minVersion": "0.8"
+}

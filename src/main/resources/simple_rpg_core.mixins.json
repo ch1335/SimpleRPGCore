@@ -6,10 +6,12 @@
     "ApplyBonusCountMixin",
     "CombatRulesMixin",
     "DamageSourceMixin",
+    "DataMainMixin",
     "EnchantmentHelperMixin",
     "FoodDataMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
+    "MappedRegistryMixin",
     "PlayerMixin",
     "RegenerationMobEffectMixin"
   ],

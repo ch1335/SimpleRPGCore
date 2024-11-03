@@ -3,6 +3,7 @@ package com.chen.simpleRPGCore.client.gui.hud;
 import com.chen.simpleRPGCore.SimpleRPGConfig;
 import com.chen.simpleRPGCore.attachmentType.SRCAttachmentTypes;
 import com.chen.simpleRPGCore.attribute.SRCAttributes;
+import com.chen.simpleRPGCore.common.capability.SRCCapabilities;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -27,7 +28,7 @@ public class ManaBar implements LayeredDraw.Layer {
         }
 
         float maxMana = (float) player.getAttributeValue(SRCAttributes.MAX_MANA);
-        float currentMana = Math.min(Minecraft.getInstance().player.getData(SRCAttachmentTypes.PLAYER_DATA).mana, maxMana);
+        float currentMana = Math.min(Minecraft.getInstance().player.getCapability(SRCCapabilities.SRC_PLAYER_DATA).getMana(), maxMana);
 
         if (currentMana < maxMana) {
             fullManaTick = 0;

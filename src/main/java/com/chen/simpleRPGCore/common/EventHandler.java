@@ -9,8 +9,10 @@ import com.chen.simpleRPGCore.mixinsAPI.minecraft.IDamageSourceExtension;
 import com.chen.simpleRPGCore.mixinsAPI.minecraft.ILivingEntityMixinExtension;
 import com.chen.simpleRPGCore.network.PlayerExtraDataSycPack;
 import dev.shadowsoffire.apothic_attributes.payload.CritParticlePayload;
+import io.redspace.ironsspellbooks.api.events.SpellOnCastEvent;
 import net.minecraft.network.protocol.game.ClientboundAnimatePacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -27,6 +29,7 @@ import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingHealEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -121,6 +124,20 @@ public class EventHandler {
                 extraData.tick();
             }
         }
+
+        @SubscribeEvent
+        public static void onPLayerLoginIn(PlayerEvent.PlayerLoggedInEvent event) {
+            if (event.getEntity() instanceof ServerPlayer player) {
+                player.getCapability(SRCCapabilities.SRC_PLAYER_DATA).sycMana();
+            }
+        }
+
+        public static class IronsSpellBooksEventHandler {
+            @SubscribeEvent(priority = EventPriority.LOWEST)
+            public static void SpellOnCastEvent(SpellOnCastEvent event) {
+                event.setManaCost((int) SRCEventFactory.onPlayerCostMana(event.getEntity(), (float) (event.getManaCost() * event.getEntity().getAttributeValue(SRCAttributes.MANA_COST)), event));
+            }
+        }
     }
 
 
@@ -128,8 +145,6 @@ public class EventHandler {
     public static class Mod {
         @SubscribeEvent
         public static void modifyAttribute(EntityAttributeModificationEvent event) {
-            event.add(EntityType.PLAYER, SRCAttributes.LIFE_STEAL);
-            event.add(EntityType.PLAYER, SRCAttributes.ARMOR_PENETRATION);
             event.add(EntityType.PLAYER, SRCAttributes.MINING_FORTUNE);
             event.add(EntityType.PLAYER, SRCAttributes.MOB_LOOTING);
             event.add(EntityType.PLAYER, SRCAttributes.MAX_MANA);
@@ -137,6 +152,8 @@ public class EventHandler {
             event.add(EntityType.PLAYER, SRCAttributes.MANA_POWER);
             event.add(EntityType.PLAYER, SRCAttributes.MANA_COST);
             event.getTypes().forEach(entityType -> {
+                event.add(entityType, SRCAttributes.LIFE_STEAL);
+                event.add(entityType, SRCAttributes.ARMOR_PENETRATION);
                 event.add(entityType, SRCAttributes.CRITICAL_CHANCE);
                 event.add(entityType, SRCAttributes.CRITICAL_DAMAGE);
                 event.add(entityType, SRCAttributes.HEAL_EFFECT);

@@ -51,7 +51,8 @@ description = '''${mod_description}'''
 config = "${mod_id}.mixins.json"
 [[mixins]]
 config = "apothic_attributes_fix.mixins.json"
-
+[[mixins]]
+config = "irons_spellbooks_fix.mixins.json"
 # The [[accessTransformers]] block allows you to declare where your AT file is.
 # If this block is omitted, a fallback attempt will be made to load an AT from META-INF/accesstransformer.cfg
 [[accessTransformers]]
@@ -103,6 +104,13 @@ versionRange = "[2.4.0,)"
 ordering = "NONE"
 side = "BOTH"
 
+[[dependencies.${ mod_id }]]
+modId = "irons_spellbooks"
+type = "optional"
+# This version range declares a minimum of the current minecraft version up to but not including the next major version
+versionRange = "[1.21-3.8.4,)"
+ordering = "NONE"
+side = "BOTH"
 # Features are specific properties of the game environment, that you may want to declare you require. This example declares
 # that your mod requires GL version 3.2 or higher. Other features will be added. They are side aware so declaring this won't
 # stop your mod loading on the server for example.

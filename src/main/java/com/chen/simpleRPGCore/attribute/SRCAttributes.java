@@ -1,8 +1,11 @@
 package com.chen.simpleRPGCore.attribute;
 
 import com.chen.simpleRPGCore.SimpleRPGCore;
+import com.chen.simpleRPGCore.mixinsAPI.minecraft.IDataMainMixinExtension;
 import dev.shadowsoffire.apothic_attributes.api.ALObjects;
+import io.redspace.ironsspellbooks.api.registry.AttributeRegistry;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.neoforged.neoforge.common.PercentageAttribute;
@@ -31,18 +34,21 @@ public class SRCAttributes {
 
     public static final DeferredHolder<Attribute, Attribute> MENDING = ATTRIBUTE_DEFERRED_REGISTER.register("mending", () -> new PercentageAttribute(makeDescriptionId("mending"), 1, 0, 114514).setSyncable(true));
 
-    public static final DeferredHolder<Attribute, Attribute> MAX_MANA = ATTRIBUTE_DEFERRED_REGISTER.register("max_mana", () -> new RangedAttribute(makeDescriptionId("max_mana"), 100, 0, 114514).setSyncable(true));
+    public static final DeferredHolder<Attribute, Attribute> MAX_MANA;
 
-    public static final DeferredHolder<Attribute, Attribute> MANA_REGAIN = ATTRIBUTE_DEFERRED_REGISTER.register("mana_regain", () -> new PercentageAttribute(makeDescriptionId("mana_regain"), 1, 0, 114514).setSyncable(true));
+    public static final DeferredHolder<Attribute, Attribute> MANA_REGAIN;
 
-    public static final DeferredHolder<Attribute, Attribute> MANA_POWER = ATTRIBUTE_DEFERRED_REGISTER.register("mana_power", () -> new RangedAttribute(makeDescriptionId("mana_power"), 0, 0, 114514).setSyncable(true));
+    public static final DeferredHolder<Attribute, Attribute> MANA_POWER;
 
     public static final DeferredHolder<Attribute, Attribute> MANA_COST = ATTRIBUTE_DEFERRED_REGISTER.register("mana_cost", () -> new PercentageAttribute(makeDescriptionId("mana_cost"), 1, 0.1, 114514).setSyncable(true).setSentiment(Attribute.Sentiment.NEGATIVE));
 
     public static final DeferredHolder<Attribute, Attribute> MAX_OVER_HEAL_AMOUNT = ATTRIBUTE_DEFERRED_REGISTER.register("max_over_heal_amount", () -> new RangedAttribute(makeDescriptionId("max_over_heal_amount"), 4, 0, 114514).setSyncable(true));
 
     static {
-        if (SimpleRPGCore.apothicAttributesLoaded) {
+        boolean apothicAttributesLoaded = SimpleRPGCore.apothicAttributesLoaded && ! IDataMainMixinExtension.isRunData.get();
+        boolean ironsSSpellBooksLoaded = SimpleRPGCore.ironsSSpellBooksLoaded && ! IDataMainMixinExtension.isRunData.get();
+
+        if (apothicAttributesLoaded) {
             CRITICAL_CHANCE = (DeferredHolder<Attribute, Attribute>) ALObjects.Attributes.CRIT_CHANCE;
             CRITICAL_DAMAGE = (DeferredHolder<Attribute, Attribute>) ALObjects.Attributes.CRIT_DAMAGE;
             LIFE_STEAL = (DeferredHolder<Attribute, Attribute>) ALObjects.Attributes.LIFE_STEAL;
@@ -57,6 +63,38 @@ public class SRCAttributes {
             HEAL_EFFECT = ATTRIBUTE_DEFERRED_REGISTER.register("heal_effect", () -> new PercentageAttribute(makeDescriptionId("heal_effect"), 1, 0, 114514).setSyncable(true));
             OVER_HEAL = ATTRIBUTE_DEFERRED_REGISTER.register("over_heal", () -> new PercentageAttribute(makeDescriptionId("over_heal"), 1, 0.1, 114514).setSyncable(true).setSentiment(Attribute.Sentiment.NEGATIVE));
         }
+
+        if (ironsSSpellBooksLoaded) {
+            MAX_MANA = AttributeRegistry.MAX_MANA;
+            MANA_REGAIN = AttributeRegistry.MANA_REGEN;
+            MANA_POWER = AttributeRegistry.SPELL_POWER;
+        } else {
+            MAX_MANA = ATTRIBUTE_DEFERRED_REGISTER.register("max_mana", () -> new RangedAttribute(makeDescriptionId("max_mana"), 100, 0, 114514).setSyncable(true));
+            MANA_REGAIN = ATTRIBUTE_DEFERRED_REGISTER.register("mana_regain", () -> new PercentageAttribute(makeDescriptionId("mana_regain"), 1, 0, 114514).setSyncable(true));
+            MANA_POWER = ATTRIBUTE_DEFERRED_REGISTER.register("mana_power", () -> new RangedAttribute(makeDescriptionId("mana_power"), 0, 0, 114514).setSyncable(true));
+        }
+    }
+
+    public enum AttributeResourceLocationHolder{
+        CRITICAL_CHANCE("critical_chance"),
+        CRITICAL_DAMAGE("critical_damage"),
+        LIFE_STEAL("life_steal"),
+        ARMOR_PENETRATION("armor_penetration"),
+        HEAL_EFFECT("heal_effect"),
+        OVER_HEAL("over_heal"),
+
+        MAX_MANA("max_mana"),
+        MANA_REGAIN("mana_regain"),
+        MANA_POWER("mana_power");
+        public final String name;
+        AttributeResourceLocationHolder(String name) {
+            this.name = name;
+        }
+
+        public ResourceLocation getResourceLocation(){
+            return ResourceLocation.fromNamespaceAndPath(SimpleRPGCore.MODID,name);
+        }
+
     }
 
     private static String makeDescriptionId(String s) {

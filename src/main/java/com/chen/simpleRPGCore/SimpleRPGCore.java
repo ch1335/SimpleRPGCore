@@ -3,6 +3,7 @@ package com.chen.simpleRPGCore;
 import com.chen.simpleRPGCore.attachmentType.SRCAttachmentTypes;
 import com.chen.simpleRPGCore.attribute.SRCAttributes;
 import com.chen.simpleRPGCore.common.DamageSourceExtraData;
+import com.chen.simpleRPGCore.common.EventHandler;
 import com.chen.simpleRPGCore.event.events.SRCSetConfigEvent;
 import com.chen.simpleRPGCore.fix.AttributeFix;
 import com.chen.simpleRPGCore.item.SRCItems;
@@ -29,6 +30,7 @@ import java.io.File;
 
 @Mod(SimpleRPGCore.MODID)
 public class SimpleRPGCore {
+    public static boolean isRunData = false;
     public static final String MODID = "simple_rpg_core";
     public static final Logger LOGGER = LogUtils.getLogger();
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
@@ -36,6 +38,8 @@ public class SimpleRPGCore {
     public static final File configDir;
 
     public static boolean apothicAttributesLoaded = false;
+
+    public static boolean ironsSSpellBooksLoaded = false;
     static {
         configDir = new File(FMLPaths.CONFIGDIR.get().toFile(), MODID);
     }
@@ -49,12 +53,18 @@ public class SimpleRPGCore {
         NeoForge.EVENT_BUS.register(this);
         modEventBus.addListener(this::addCreative);
 
+        if (ironsSSpellBooksLoaded) {
+            NeoForge.EVENT_BUS.register(EventHandler.Game.IronsSpellBooksEventHandler.class);
+        }
         SimpleRPGConfig.load();
     }
 
     static {
         if (ModList.get().isLoaded("apothic_attributes")) {
             apothicAttributesLoaded = true;
+        }
+        if (ModList.get().isLoaded("irons_spellbooks")) {
+            ironsSSpellBooksLoaded = true;
         }
     }
 

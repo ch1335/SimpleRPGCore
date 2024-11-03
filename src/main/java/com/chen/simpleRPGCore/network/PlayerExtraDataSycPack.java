@@ -2,6 +2,7 @@ package com.chen.simpleRPGCore.network;
 
 import com.chen.simpleRPGCore.SimpleRPGCore;
 import com.chen.simpleRPGCore.attachmentType.SRCAttachmentTypes;
+import com.chen.simpleRPGCore.common.capability.SRCCapabilities;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -29,14 +30,14 @@ public record PlayerExtraDataSycPack(SycType sycType, CompoundTag data) implemen
 
     public static void SycMana(ServerPlayer player) {
         CompoundTag tag = new CompoundTag();
-        tag.putFloat("value", player.getData(SRCAttachmentTypes.PLAYER_DATA).mana);
+        tag.putFloat("value", player.getCapability(SRCCapabilities.SRC_PLAYER_DATA).getMana());
         PacketDistributor.sendToPlayer(player, new PlayerExtraDataSycPack(PlayerExtraDataSycPack.SycType.MANA, tag));
     }
 
     public static void clientHandler(final PlayerExtraDataSycPack pack, final IPayloadContext context) {
         Player player = context.player();
         if (pack.sycType == SycType.MANA) {
-            player.getData(SRCAttachmentTypes.PLAYER_DATA).mana = pack.data.getFloat("value");
+            player.getCapability(SRCCapabilities.SRC_PLAYER_DATA).setMana(pack.data.getFloat("value"));;
         }
     }
 
