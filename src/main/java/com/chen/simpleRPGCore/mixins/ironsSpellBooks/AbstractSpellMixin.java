@@ -17,7 +17,7 @@ public abstract class AbstractSpellMixin {
     @Shadow
     public abstract int getManaCost(int level);
 
-    @ModifyVariable(method = "canBeCastedBy", at = @At(value = "STORE", ordinal = 0), ordinal = 2)
+    @ModifyVariable(method = "canBeCastedBy", at = @At(value = "STORE",ordinal = 0), ordinal = 2)
     private boolean canBeCastedBy(boolean value, @Local(name = "spellLevel") int spellLevel, @Local(name = "playerMagicData") MagicData playerMagicData, @Local(name = "player") Player player) {
         float playerMana = playerMagicData.getMana();
         return playerMana - (float) this.getManaCost(spellLevel) * player.getAttributeValue(SRCAttributes.MANA_COST) >= 0.0F;

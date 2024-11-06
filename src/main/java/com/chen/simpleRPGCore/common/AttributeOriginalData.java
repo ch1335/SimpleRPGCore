@@ -1,7 +1,7 @@
 package com.chen.simpleRPGCore.common;
 
 public class AttributeOriginalData {
-    private final Double original;
+    private Double original;
     public Double newAmount;
 
 
@@ -38,6 +38,10 @@ public class AttributeOriginalData {
         //get new amount. if Attribute don't exist then return def
         public double getNew(double def) {
             return data != null ? data.newAmount : def;
+        }
+
+        public void setOriginal(double newOriginal) {
+            if (data != null) data.original = newOriginal;
         }
 
         //set the new amount if Attribute is exist

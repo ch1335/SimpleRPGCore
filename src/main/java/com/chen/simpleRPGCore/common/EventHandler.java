@@ -8,6 +8,7 @@ import com.chen.simpleRPGCore.event.SRCEventFactory;
 import com.chen.simpleRPGCore.mixinsAPI.minecraft.IDamageSourceExtension;
 import com.chen.simpleRPGCore.mixinsAPI.minecraft.ILivingEntityMixinExtension;
 import com.chen.simpleRPGCore.network.PlayerExtraDataSycPack;
+import com.chen.simpleRPGCore.utils.SimpleSchedule;
 import dev.shadowsoffire.apothic_attributes.payload.CritParticlePayload;
 import io.redspace.ironsspellbooks.api.events.SpellOnCastEvent;
 import net.minecraft.network.protocol.game.ClientboundAnimatePacket;
@@ -20,10 +21,12 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.common.damagesource.DamageContainer;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
@@ -31,6 +34,7 @@ import net.neoforged.neoforge.event.entity.living.LivingHealEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -56,12 +60,12 @@ public class EventHandler {
                 extraData.criticalDamage = criticalDamage;
             }
 
-            if (extraData.isBypassesCooldown()) {
-                extraData.originalInvulnerabilityTicksAfterAttack = container.getPostAttackInvulnerabilityTicks();
-                container.setPostAttackInvulnerabilityTicks(0);
-            }
-
             if (SRCEventFactory.modifyDamageAfterCritical(container, livingEntity)) event.setCanceled(true);
+
+            if (extraData.isBypassesCooldown()) {
+                extraData.originalInvulnerableTime = event.getEntity().invulnerableTime;
+                event.getEntity().invulnerableTime = 0;
+            }
 
             container.setNewDamage(container.getNewDamage() + extraData.getUnCriticalAbleDamage());
         }
@@ -77,8 +81,10 @@ public class EventHandler {
             LivingEntity livingEntity = event.getEntity();
             Entity attacker = damageSource.getDirectEntity();
             DamageSourceExtraData extraData = ((IDamageSourceExtension) damageSource).src$getExtraData();
-            if (extraData.isBypassesCooldown()) {
-                event.getEntity().invulnerableTime = extraData.originalInvulnerabilityTicksAfterAttack;
+
+            if (extraData.originalInvulnerableTime > 0) {
+                event.getEntity().invulnerableTime = extraData.originalInvulnerableTime;
+                extraData.originalInvulnerableTime = 0;
             }
 
             if (attacker != null && extraData.isCriticalDamageToEntity(livingEntity)) {
@@ -130,6 +136,17 @@ public class EventHandler {
             if (event.getEntity() instanceof ServerPlayer player) {
                 player.getCapability(SRCCapabilities.SRC_PLAYER_DATA).sycMana();
             }
+        }
+
+
+        @SubscribeEvent
+        public static void serverSchedule(ServerTickEvent.Post event) {
+            SimpleSchedule.update(Dist.DEDICATED_SERVER);
+        }
+
+        @SubscribeEvent
+        public static void clientSchedule(ClientTickEvent.Post event) {
+            SimpleSchedule.update(Dist.CLIENT);
         }
 
         public static class IronsSpellBooksEventHandler {

@@ -22,7 +22,7 @@ public class DamageSourceExtraData {
     private final IntArraySet criticalDamageEntities = new IntArraySet();
 
     private final ImmutableMap<Attribute, AttributeOriginalData> attributeData;
-    private final OriginalState originalState;
+    private OriginalState originalState;
 
     //set the damage weather bypass Cooldown
     public boolean bypassesCooldown = false;
@@ -39,9 +39,10 @@ public class DamageSourceExtraData {
     //Critical damage already caused
     public float criticalDamage = 0;
 
-    public int originalInvulnerabilityTicksAfterAttack = 20;
+    public int originalInvulnerableTime = 0;
     //this is paper for kubejs. don't use this in mod
     public Optional<Object> customDataHolder = Optional.empty();
+
 
     public void setCustomData(Object customDataHolder) {
         this.customDataHolder = Optional.of(customDataHolder);
@@ -71,6 +72,14 @@ public class DamageSourceExtraData {
 
     public DamageSourceExtraData() {
         this(OriginalState.DEFAULT);
+    }
+
+    public void setOriginalState(OriginalState originalState) {
+        this.originalState = originalState;
+    }
+
+    public ImmutableMap<Attribute, AttributeOriginalData> getAttributeData() {
+        return attributeData;
     }
 
     public AttributeOriginalData.AttributeOriginalDataHolder getAttributeOriginalHolder(Holder<Attribute> attribute) {
@@ -196,6 +205,14 @@ public class DamageSourceExtraData {
 
             public Builder setBypassesCooldown(boolean bypassesCooldown) {
                 this.bypassesCooldown = bypassesCooldown;
+                return this;
+            }
+
+            public Builder copyFrom(OriginalState state){
+                bypassesCooldown = state.bypassesCooldown;
+                canCritical = state.canCritical;
+                canDoLifeSteal = state.canDoLifeSteal;
+                unCriticalAbleDamage = state.unCriticalAbleDamage;
                 return this;
             }
 

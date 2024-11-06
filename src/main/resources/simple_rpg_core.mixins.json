@@ -13,6 +13,8 @@
     "LivingEntityMixin",
     "MappedRegistryMixin",
     "PlayerMixin",
+    "ProjectileMixin",
+    "ProjectileWeaponItemMixin",
     "RegenerationMobEffectMixin"
   ],
   "client": [
