@@ -1,0 +1,6 @@
+{
+  "values": [
+    "simple_rpg_core:can_life_steal_tag_holder",
+    "#minecraft:is_player_attack"
+  ]
+}

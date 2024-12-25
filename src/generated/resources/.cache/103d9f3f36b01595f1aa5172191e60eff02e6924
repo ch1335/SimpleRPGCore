@@ -1,0 +1,5 @@
+// 1.21.1	2024-12-22T18:42:38.8898618	Registries
+54808c939f1f9b89e426ddf931226dd254c6f109 data/simple_rpg_core/damage_type/bypasses_cooldown_tag_holder.json
+d1f3057691032a39e9545e9846b774491631cab4 data/simple_rpg_core/damage_type/can_critical_tag_holder.json
+1a8d0162f54032de5b3b65360252340c4f2ec51c data/simple_rpg_core/damage_type/can_life_steal_tag_holder.json
+89f0cc32085be03271e17c4d9b80ab6afff8a86b data/simple_rpg_core/damage_type/true_damage_tag_holder.json

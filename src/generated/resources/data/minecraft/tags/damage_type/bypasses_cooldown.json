@@ -1,0 +1,6 @@
+{
+  "values": [
+    "simple_rpg_core:bypasses_cooldown_tag_holder",
+    "#simple_rpg_core:true_damage"
+  ]
+}
