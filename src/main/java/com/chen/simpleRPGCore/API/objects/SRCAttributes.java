@@ -1,4 +1,4 @@
-package com.chen.simpleRPGCore.attribute;
+package com.chen.simpleRPGCore.API.objects;
 
 import com.chen.simpleRPGCore.SimpleRPGCore;
 import com.chen.simpleRPGCore.mixinsAPI.minecraft.IDataMainMixinExtension;
@@ -42,7 +42,7 @@ public class SRCAttributes {
 
     public static final DeferredHolder<Attribute, Attribute> MANA_COST = ATTRIBUTE_DEFERRED_REGISTER.register("mana_cost", () -> new PercentageAttribute(makeDescriptionId("mana_cost"), 1, 0.1, 114514).setSyncable(true).setSentiment(Attribute.Sentiment.NEGATIVE));
 
-    public static final DeferredHolder<Attribute, Attribute> MAX_OVER_HEAL_AMOUNT = ATTRIBUTE_DEFERRED_REGISTER.register("max_over_heal_amount", () -> new RangedAttribute(makeDescriptionId("max_over_heal_amount"), 4, 0, 114514).setSyncable(true));
+    public static final DeferredHolder<Attribute, Attribute> MAX_OVER_HEAL_PERCENTAGE = ATTRIBUTE_DEFERRED_REGISTER.register("max_over_heal_percentage", () -> new PercentageAttribute(makeDescriptionId("max_over_heal_percentage"), 0.2, 0, 114514).setSyncable(true));
 
     static {
         boolean apothicAttributesLoaded = SimpleRPGCore.apothicAttributesLoaded && ! IDataMainMixinExtension.isRunData.get();

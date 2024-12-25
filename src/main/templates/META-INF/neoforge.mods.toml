@@ -50,9 +50,11 @@ description = '''${mod_description}'''
 [[mixins]]
 config = "${mod_id}.mixins.json"
 [[mixins]]
-config = "apothic_attributes_fix.mixins.json"
+config = "src_apothic_attributes.mixins.json"
 [[mixins]]
-config = "irons_spellbooks_fix.mixins.json"
+config = "src_irons_spellbooks.mixins.json"
+
+
 # The [[accessTransformers]] block allows you to declare where your AT file is.
 # If this block is omitted, a fallback attempt will be made to load an AT from META-INF/accesstransformer.cfg
 [[accessTransformers]]

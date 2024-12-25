@@ -1,5 +1,6 @@
 package com.chen.simpleRPGCore.mixins.minecraft;
 
+import com.chen.simpleRPGCore.client.gui.AdditionalHeartRender;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
@@ -12,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
 
-@Mixin(Gui.class)
+@Mixin(value = Gui.class,priority = 500)
 public abstract class GuiMixin {
     @Shadow
     private int lastHealth;
@@ -25,8 +26,8 @@ public abstract class GuiMixin {
     @Nullable
     protected abstract Player getCameraPlayer();
 
-    @Inject(method = "renderHealthLevel", at = @At("HEAD"))
-    private void renderHealthLevel(GuiGraphics p_283143_, CallbackInfo ci) {
+    @Inject(method = "renderHealthLevel", at = @At("RETURN"))
+    private void renderHealthLevel(GuiGraphics guiGraphics, CallbackInfo ci) {
         Player player = this.getCameraPlayer();
         if (player != null) {
             int i = Mth.ceil(player.getHealth());
@@ -35,4 +36,9 @@ public abstract class GuiMixin {
             }
         }
     }
+    @Inject(method = "renderHealthLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderHearts(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/world/entity/player/Player;IIIIFIIIZ)V"))
+    private void BeforeRenderHealthLevel(GuiGraphics guiGraphics, CallbackInfo ci) {
+        AdditionalHeartRender.render(guiGraphics);
+    }
+
 }

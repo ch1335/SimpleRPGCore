@@ -1,16 +1,21 @@
 package com.chen.simpleRPGCore.common;
 
+import com.chen.simpleRPGCore.API.objects.SRCAttributes;
+import com.chen.simpleRPGCore.API.objects.ShieldTypes;
 import com.chen.simpleRPGCore.SimpleRPGCore;
-import com.chen.simpleRPGCore.attribute.SRCAttributes;
+import com.chen.simpleRPGCore.common.ShieldSystem.Shield;
+import com.chen.simpleRPGCore.common.ShieldSystem.UnitShield;
+import com.chen.simpleRPGCore.common.capability.MobExtraData;
 import com.chen.simpleRPGCore.common.capability.PlayerExtraData;
 import com.chen.simpleRPGCore.common.capability.SRCCapabilities;
 import com.chen.simpleRPGCore.event.SRCEventFactory;
 import com.chen.simpleRPGCore.mixinsAPI.minecraft.IDamageSourceExtension;
-import com.chen.simpleRPGCore.mixinsAPI.minecraft.ILivingEntityMixinExtension;
-import com.chen.simpleRPGCore.network.PlayerExtraDataSycPack;
+import com.chen.simpleRPGCore.network.SimpleDataSetter;
 import com.chen.simpleRPGCore.utils.SimpleSchedule;
+import com.chen.simpleRPGCore.utils.Util;
 import dev.shadowsoffire.apothic_attributes.payload.CritParticlePayload;
 import io.redspace.ironsspellbooks.api.events.SpellOnCastEvent;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.game.ClientboundAnimatePacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -19,8 +24,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -39,6 +43,8 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
+import java.util.Objects;
+
 public class EventHandler {
     @EventBusSubscriber(modid = SimpleRPGCore.MODID, bus = EventBusSubscriber.Bus.GAME)
     public static class Game {
@@ -47,27 +53,19 @@ public class EventHandler {
             DamageContainer container = event.getContainer();
             LivingEntity livingEntity = event.getEntity();
             DamageSourceExtraData extraData = ((IDamageSourceExtension) container.getSource()).src$getExtraData();
-
-
             if (SRCEventFactory.modifyDamageBeforeCritical(container, livingEntity)) event.setCanceled(true);
-
             float criticalChance = (float) extraData.getAttributeOriginalHolder(SRCAttributes.CRITICAL_CHANCE).getNew(0);
 
-            if (extraData.isCanCritical() && livingEntity.getRandom().nextFloat() <= criticalChance && SRCEventFactory.modPreCritical(container, livingEntity)) {
+            if (Util.canCriticalByTag(container.getSource()) && livingEntity.getRandom().nextFloat() <= criticalChance && SRCEventFactory.modPreCritical(container, livingEntity)) {
                 float criticalDamage = container.getNewDamage() * (float) extraData.getAttributeOriginalHolder(SRCAttributes.CRITICAL_DAMAGE).getNew(1);
-                extraData.addCriticalDamageEntity(livingEntity);
+                extraData.addCriticalDamageEntity(livingEntity.getId());
                 container.setNewDamage(criticalDamage);
                 extraData.criticalDamage = criticalDamage;
             }
 
             if (SRCEventFactory.modifyDamageAfterCritical(container, livingEntity)) event.setCanceled(true);
 
-            if (extraData.isBypassesCooldown()) {
-                extraData.originalInvulnerableTime = event.getEntity().invulnerableTime;
-                event.getEntity().invulnerableTime = 0;
-            }
-
-            container.setNewDamage(container.getNewDamage() + extraData.getUnCriticalAbleDamage());
+            event.setAmount(event.getAmount() + extraData.getFinalDamageAddition());
         }
 
         @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -82,12 +80,7 @@ public class EventHandler {
             Entity attacker = damageSource.getDirectEntity();
             DamageSourceExtraData extraData = ((IDamageSourceExtension) damageSource).src$getExtraData();
 
-            if (extraData.originalInvulnerableTime > 0) {
-                event.getEntity().invulnerableTime = extraData.originalInvulnerableTime;
-                extraData.originalInvulnerableTime = 0;
-            }
-
-            if (attacker != null && extraData.isCriticalDamageToEntity(livingEntity)) {
+            if (attacker != null && extraData.isCriticalDamageToEntity(livingEntity.getId())) {
                 attacker.level().playSound(null, attacker.getX(), attacker.getY(), attacker.getZ(), SoundEvents.PLAYER_ATTACK_CRIT, attacker.getSoundSource(), 1.0F, 1.0F);
                 if (attacker instanceof LivingEntity livingEntity1 && livingEntity1.level() instanceof ServerLevel level) {
                     if (SimpleRPGCore.apothicAttributesLoaded) {
@@ -97,11 +90,11 @@ public class EventHandler {
                     }
                 }
             }
+        }
 
-            if (livingEntity.getAbsorptionAmount() > 0 && livingEntity.getAbsorptionAmount() < livingEntity.getAttributeValue(SRCAttributes.MAX_OVER_HEAL_AMOUNT)) {
-                livingEntity.getAttributes().getInstance(Attributes.MAX_ABSORPTION).removeModifier(ILivingEntityMixinExtension.OVER_HEAL);
-                livingEntity.getAttributes().getInstance(Attributes.MAX_ABSORPTION).addTransientModifier(new AttributeModifier(ILivingEntityMixinExtension.OVER_HEAL, livingEntity.getAbsorptionAmount(), AttributeModifier.Operation.ADD_VALUE));
-            }
+        @SubscribeEvent(priority = EventPriority.HIGHEST)
+        public static void handleShield(LivingDamageEvent.Pre event) {
+            Shield.handleShieldAbsorb(event);
         }
 
         @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -112,29 +105,35 @@ public class EventHandler {
                 event.setAmount((float) (event.getAmount() * healEffect));
             }
 
-            float overheal = (float) living.getAttributeValue(SRCAttributes.OVER_HEAL);
-            float maxOverheal = (float) living.getAttributeValue(SRCAttributes.MAX_OVER_HEAL_AMOUNT);
-            if (overheal > 0.0F && living.getAbsorptionAmount() < maxOverheal) {
-                float overHealAmount = Math.min(maxOverheal, living.getAbsorptionAmount() + Math.max(0, event.getAmount() * overheal - (living.getMaxHealth() - living.getHealth())));
-                living.getAttributes().getInstance(Attributes.MAX_ABSORPTION).removeModifier(ILivingEntityMixinExtension.OVER_HEAL);
-                living.getAttributes().getInstance(Attributes.MAX_ABSORPTION).addTransientModifier(new AttributeModifier(ILivingEntityMixinExtension.OVER_HEAL, overHealAmount, AttributeModifier.Operation.ADD_VALUE));
+            float overHealRate = (float) living.getAttributeValue(SRCAttributes.OVER_HEAL);
+            float maxOverHealAmount = (float) (living.getMaxHealth() * living.getAttributeValue(SRCAttributes.MAX_OVER_HEAL_PERCENTAGE));
+            float OriginalOverHealAmount = event.getAmount() - (living.getMaxHealth() - living.getHealth());
 
-                living.setAbsorptionAmount(overHealAmount);
+            if (overHealRate > 0 && OriginalOverHealAmount > 0) {
+                float overHealAmount = OriginalOverHealAmount * overHealRate;
+                MobExtraData mobExtraData = living.getCapability(SRCCapabilities.SRC_MOB_DATA);
+                if (mobExtraData != null) {
+                    UnitShield shield = mobExtraData.getShield(ShieldTypes.OVER_HEAL_SHIELD);
+                    if (shield != null) {
+                        shield.addShieldAmount(overHealAmount, maxOverHealAmount);
+                    }
+                }
             }
         }
 
         @SubscribeEvent
         public static void PlayerTickEvent$Post(PlayerTickEvent.Post event) {
-            PlayerExtraData extraData = event.getEntity().getCapability(SRCCapabilities.SRC_PLAYER_DATA);
-            if (extraData != null) {
-                extraData.tick();
+            if (!event.getEntity().level().isClientSide) {
+                Objects.requireNonNull(event.getEntity().getCapability(SRCCapabilities.SRC_PLAYER_DATA)).tick();
+                Objects.requireNonNull(event.getEntity().getCapability(SRCCapabilities.SRC_MOB_DATA)).tick();
             }
         }
 
         @SubscribeEvent
         public static void onPLayerLoginIn(PlayerEvent.PlayerLoggedInEvent event) {
             if (event.getEntity() instanceof ServerPlayer player) {
-                player.getCapability(SRCCapabilities.SRC_PLAYER_DATA).sycMana();
+                Objects.requireNonNull(player.getCapability(SRCCapabilities.SRC_PLAYER_DATA)).sycAll();
+                Objects.requireNonNull(player.getCapability(SRCCapabilities.SRC_MOB_DATA)).sycShieldAmount();
             }
         }
 
@@ -176,19 +175,29 @@ public class EventHandler {
                 event.add(entityType, SRCAttributes.HEAL_EFFECT);
                 event.add(entityType, SRCAttributes.MENDING);
                 event.add(entityType, SRCAttributes.OVER_HEAL);
-                event.add(entityType, SRCAttributes.MAX_OVER_HEAL_AMOUNT);
+                event.add(entityType, SRCAttributes.MAX_OVER_HEAL_PERCENTAGE);
             });
         }
 
         @SubscribeEvent
         public static void RegisterCapabilitiesEvent(RegisterCapabilitiesEvent event) {
             event.registerEntity(SRCCapabilities.SRC_PLAYER_DATA, EntityType.PLAYER, (player, ctx) -> new PlayerExtraData(player));
+            BuiltInRegistries.ENTITY_TYPE.stream()
+                    .filter(DefaultAttributes::hasSupplier)
+                    .forEach(entityType -> {
+                        event.registerEntity(SRCCapabilities.SRC_MOB_DATA, entityType, (entity, ctx) -> {
+                            if (entity instanceof LivingEntity livingEntity) {
+                                return new MobExtraData(livingEntity);
+                            }
+                            return null;
+                        });
+                    });
         }
 
         @SubscribeEvent
         public static void RegisterPayloadHandlersEvent(RegisterPayloadHandlersEvent event) {
             final PayloadRegistrar registrar = event.registrar("1");
-            registrar.playToClient(PlayerExtraDataSycPack.TYPE, PlayerExtraDataSycPack.STREAM_CODEC, PlayerExtraDataSycPack::clientHandler);
+            registrar.playBidirectional(SimpleDataSetter.TYPE, SimpleDataSetter.STREAM_CODEC, SimpleDataSetter::handler);
         }
     }
 }

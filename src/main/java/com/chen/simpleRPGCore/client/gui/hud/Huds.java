@@ -7,6 +7,8 @@ import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 
 public class Huds {
     public static final ResourceLocation ICON = ResourceLocation.fromNamespaceAndPath(SimpleRPGCore.MODID,"textures/hud/icon.png");
+    public static final ResourceLocation CRITICAL_ICON = ResourceLocation.fromNamespaceAndPath(SimpleRPGCore.MODID,"textures/hud/critical.png");
+
     public static ManaBar manaBar;
     public static void register(RegisterGuiLayersEvent event){
         if (SimpleRPGConfig.clientConfig.enableManaBar) {

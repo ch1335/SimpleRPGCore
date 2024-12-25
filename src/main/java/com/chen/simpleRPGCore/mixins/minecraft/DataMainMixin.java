@@ -8,11 +8,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(net.minecraft.data.Main.class)
 public class DataMainMixin implements IDataMainMixinExtension {
-
-    @Inject(method = "main",at = @At("HEAD"))
-    private static void start(CallbackInfo ci){
+    @Inject(method = "main", at = @At("HEAD"))
+    private static void start(CallbackInfo ci) {
         isRunData.set(true);
     }
-
-
 }

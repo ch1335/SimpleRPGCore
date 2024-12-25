@@ -1,10 +1,11 @@
 package com.chen.simpleRPGCore.mixins.minecraft;
 
-import com.chen.simpleRPGCore.attribute.SRCAttributes;
+import com.chen.simpleRPGCore.API.objects.SRCAttributes;
 import com.chen.simpleRPGCore.common.DamageSourceExtraData;
 import com.chen.simpleRPGCore.event.SRCEventFactory;
 import com.chen.simpleRPGCore.mixinsAPI.minecraft.IDamageSourceExtension;
 import com.chen.simpleRPGCore.mixinsAPI.minecraft.ILivingEntityMixinExtension;
+import com.chen.simpleRPGCore.tags.SRCDamageTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -45,13 +46,12 @@ public abstract class LivingEntityMixin extends Entity implements ILivingEntityM
     @Inject(method = "actuallyHurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setHealth(F)V"))
     private void actuallyHurt(DamageSource damageSource, float pDamageAmount, CallbackInfo ci) {
         float actuallyHealthLost = Math.min(this.getHealth(), this.damageContainers.peek().getNewDamage());
-
         LivingEntity livingEntity = (LivingEntity) (Object) this;
         DamageSourceExtraData extraData = ((IDamageSourceExtension) damageSource).src$getExtraData();
 
-        float life_steal = extraData.isCanDoLifeSteal() ? (float) extraData.getAttributeOriginalHolder(SRCAttributes.LIFE_STEAL).getNew(0) : 0;
+        float life_steal = damageSource.is(SRCDamageTags.CAN_LIFE_STEAL) ? (float) extraData.getAttributeOriginalHolder(SRCAttributes.LIFE_STEAL).getNew(0) : 0;
 
-        if (life_steal > 0 && damageSource.getEntity() instanceof LivingEntity living && extraData.isMeleeDamageToEntity(livingEntity)) {
+        if (life_steal > 0 && damageSource.getEntity() instanceof LivingEntity living && extraData.isMeleeDamageToEntity(livingEntity.getId())) {
             float healAmount = actuallyHealthLost * life_steal;
             living.heal(healAmount);
         }

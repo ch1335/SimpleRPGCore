@@ -1,7 +1,7 @@
 package com.chen.simpleRPGCore.mixins.ironsSpellBooks;
 
 
-import com.chen.simpleRPGCore.attribute.SRCAttributes;
+import com.chen.simpleRPGCore.API.objects.SRCAttributes;
 import com.llamalad7.mixinextras.sugar.Local;
 import io.redspace.ironsspellbooks.api.magic.MagicData;
 import io.redspace.ironsspellbooks.api.spells.AbstractSpell;

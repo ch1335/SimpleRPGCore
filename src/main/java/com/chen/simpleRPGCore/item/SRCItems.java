@@ -1,7 +1,7 @@
 package com.chen.simpleRPGCore.item;
 
+import com.chen.simpleRPGCore.API.objects.SRCAttributes;
 import com.chen.simpleRPGCore.SimpleRPGCore;
-import com.chen.simpleRPGCore.attribute.SRCAttributes;
 import com.chen.simpleRPGCore.item.items.TestItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlotGroup;

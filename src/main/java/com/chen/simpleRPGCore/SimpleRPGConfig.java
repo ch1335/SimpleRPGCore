@@ -1,6 +1,6 @@
 package com.chen.simpleRPGCore;
 
-import com.chen.simpleRPGCore.attribute.SRCAttributes;
+import com.chen.simpleRPGCore.API.objects.SRCAttributes;
 import com.chen.simpleRPGCore.common.DamageSourceExtraData;
 import dev.shadowsoffire.placebo.config.Configuration;
 import net.minecraft.world.damagesource.DamageSource;

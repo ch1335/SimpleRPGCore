@@ -1,7 +1,7 @@
 package com.chen.simpleRPGCore.mixins.minecraft;
 
 
-import com.chen.simpleRPGCore.attribute.SRCAttributes;
+import com.chen.simpleRPGCore.API.objects.SRCAttributes;
 import com.chen.simpleRPGCore.utils.Util;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.Holder;

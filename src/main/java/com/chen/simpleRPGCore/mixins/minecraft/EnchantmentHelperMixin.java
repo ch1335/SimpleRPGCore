@@ -1,6 +1,6 @@
 package com.chen.simpleRPGCore.mixins.minecraft;
 
-import com.chen.simpleRPGCore.attribute.SRCAttributes;
+import com.chen.simpleRPGCore.API.objects.SRCAttributes;
 import com.chen.simpleRPGCore.utils.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.LivingEntity;

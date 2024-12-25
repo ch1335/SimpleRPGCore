@@ -1,15 +1,13 @@
 package com.chen.simpleRPGCore.common.capability;
 
-import com.chen.simpleRPGCore.SimpleRPGConfig;
+import com.chen.simpleRPGCore.API.objects.SRCAttributes;
 import com.chen.simpleRPGCore.SimpleRPGCore;
 import com.chen.simpleRPGCore.attachmentType.SRCAttachmentTypes;
-import com.chen.simpleRPGCore.attribute.SRCAttributes;
 import com.chen.simpleRPGCore.event.SRCEventFactory;
-import com.chen.simpleRPGCore.network.PlayerExtraDataSycPack;
+import com.chen.simpleRPGCore.network.NetHandlers;
 import io.redspace.ironsspellbooks.api.magic.MagicData;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.NotNull;
@@ -62,7 +60,6 @@ public class PlayerExtraData {
         } else {
             if (finalCost <= getMana()) {
                 setMana(getMana() - finalCost);
-                sycMana();
                 return true;
             } else {
                 return false;
@@ -73,9 +70,6 @@ public class PlayerExtraData {
     public void regainMana(float amount, boolean absolute) {
         float manaRegain = absolute ? 1 : (float) player.getAttributeValue(SRCAttributes.MANA_REGAIN);
         setMana((float) Math.min(player.getAttributeValue(SRCAttributes.MAX_MANA), getMana() + amount * manaRegain));
-        if (!SimpleRPGCore.ironsSSpellBooksLoaded) {
-            sycMana();
-        }
     }
 
     public void regainMana(float amount) {
@@ -88,25 +82,32 @@ public class PlayerExtraData {
 
     public void tick() {
         if (!player.isDeadOrDying()) {
-            if (!SimpleRPGCore.ironsSSpellBooksLoaded && player instanceof ServerPlayer && player.level().getGameTime() % 20 == 0) {
+            if (!SimpleRPGCore.ironsSSpellBooksLoaded && player.level().getGameTime() % 20 == 0) {
                 regainMana((float) (player.getAttributeValue(SRCAttributes.MAX_MANA) * 0.05));
+            }
+
+            float currentMana = getMana();
+            if (currentMana != getDataHolder().oldMana) {
+                getDataHolder().oldMana = currentMana;
+                sycMana();
             }
         }
     }
 
+    public void sycAll() {
+        sycMana();
+    }
+
     public void sycMana() {
-        if (player instanceof ServerPlayer serverPlayer) {
-            PlayerExtraDataSycPack.SycMana(serverPlayer);
+        if (!player.level().isClientSide) {
+            NetHandlers.sendMana(player);
         }
     }
 
     public static class DataHolder implements INBTSerializable<CompoundTag> {
+        public float oldMana;
 
         public float mana;
-
-        public DataHolder(float mana) {
-            this.mana = mana;
-        }
 
         @Override
         public @UnknownNullability CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {

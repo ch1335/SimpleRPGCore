@@ -1,8 +1,7 @@
 package com.chen.simpleRPGCore.client.gui.hud;
 
+import com.chen.simpleRPGCore.API.objects.SRCAttributes;
 import com.chen.simpleRPGCore.SimpleRPGConfig;
-import com.chen.simpleRPGCore.attachmentType.SRCAttachmentTypes;
-import com.chen.simpleRPGCore.attribute.SRCAttributes;
 import com.chen.simpleRPGCore.common.capability.SRCCapabilities;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.DeltaTracker;

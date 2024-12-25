@@ -17,15 +17,15 @@ public class PlayerMixin {
     @Inject(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
     public void MeleeAttack(Entity pTarget, CallbackInfo ci, @Local(ordinal = 0) LocalRef<DamageSource> damageSourceLocalRef) {
         IDamageSourceExtension iDamageSource = (IDamageSourceExtension) damageSourceLocalRef.get();
-        iDamageSource.src$getExtraData().addMeleeDamageEntity(pTarget);
+        iDamageSource.src$getExtraData().addMeleeDamageEntity(pTarget.getId());
         damageSourceLocalRef.set((DamageSource) iDamageSource);
     }
 
     @Inject(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
     public void SweepingAttack(Entity pTarget, CallbackInfo ci, @Local(ordinal = 0) LocalRef<DamageSource> damageSourceLocalRef, @Local(ordinal = 0) LivingEntity livingEntity) {
         IDamageSourceExtension iDamageSource = (IDamageSourceExtension) damageSourceLocalRef.get();
-        iDamageSource.src$getExtraData().addMeleeDamageEntity(livingEntity);
-        iDamageSource.src$getExtraData().addSweepingDamageEntity(livingEntity);
+        iDamageSource.src$getExtraData().addMeleeDamageEntity(livingEntity.getId());
+        iDamageSource.src$getExtraData().addSweepingDamageEntity(livingEntity.getId());
         damageSourceLocalRef.set((DamageSource) iDamageSource);
     }
 }

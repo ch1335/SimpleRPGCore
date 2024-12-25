@@ -1,5 +1,6 @@
 package com.chen.simpleRPGCore.attribute;
 
+import com.chen.simpleRPGCore.API.objects.SRCAttributes;
 import com.chen.simpleRPGCore.SimpleRPGCore;
 import net.minecraft.core.Holder;
 import net.minecraft.core.MappedRegistry;

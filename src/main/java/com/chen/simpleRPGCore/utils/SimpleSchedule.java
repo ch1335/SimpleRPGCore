@@ -3,7 +3,6 @@ package com.chen.simpleRPGCore.utils;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.neoforgespi.Environment;
 
 import java.util.ArrayList;
 import java.util.Iterator;
