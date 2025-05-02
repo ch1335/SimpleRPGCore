@@ -42,7 +42,7 @@ public class SRCAttributes {
 
     public static final DeferredHolder<Attribute, Attribute> MANA_COST = ATTRIBUTE_DEFERRED_REGISTER.register("mana_cost", () -> new PercentageAttribute(makeDescriptionId("mana_cost"), 1, 0.1, 114514).setSyncable(true).setSentiment(Attribute.Sentiment.NEGATIVE));
 
-    public static final DeferredHolder<Attribute, Attribute> MAX_OVER_HEAL_PERCENTAGE = ATTRIBUTE_DEFERRED_REGISTER.register("max_over_heal_percentage", () -> new PercentageAttribute(makeDescriptionId("max_over_heal_percentage"), 0.2, 0, 114514).setSyncable(true));
+    public static final DeferredHolder<Attribute, Attribute> MAX_OVER_HEAL_PERCENTAGE = ATTRIBUTE_DEFERRED_REGISTER.register("max_over_heal_percentage", () -> new PercentageAttribute(makeDescriptionId("max_over_heal_percentage"), 0, 0, 114514).setSyncable(true));
 
     static {
         boolean apothicAttributesLoaded = SimpleRPGCore.apothicAttributesLoaded && ! IDataMainMixinExtension.isRunData.get();
@@ -56,12 +56,12 @@ public class SRCAttributes {
             HEAL_EFFECT = (DeferredHolder<Attribute, Attribute>) ALObjects.Attributes.HEALING_RECEIVED;
             OVER_HEAL = (DeferredHolder<Attribute, Attribute>) ALObjects.Attributes.OVERHEAL;
         } else {
-            CRITICAL_CHANCE = ATTRIBUTE_DEFERRED_REGISTER.register("critical_chance", () -> new PercentageAttribute(makeDescriptionId("critical_chance"), 0, 0, 1).setSyncable(true));
+            CRITICAL_CHANCE = ATTRIBUTE_DEFERRED_REGISTER.register("critical_chance", () -> new PercentageAttribute(makeDescriptionId("critical_chance"), 0.05, 0, 1).setSyncable(true));
             CRITICAL_DAMAGE = ATTRIBUTE_DEFERRED_REGISTER.register("critical_damage", () -> new PercentageAttribute(makeDescriptionId("critical_damage"), 1.5, 1, 114514).setSyncable(true));
             LIFE_STEAL = ATTRIBUTE_DEFERRED_REGISTER.register("life_steal", () -> new PercentageAttribute(makeDescriptionId("life_steal"), 0, 0, 114514).setSyncable(true));
             ARMOR_PENETRATION = ATTRIBUTE_DEFERRED_REGISTER.register("armor_penetration", () -> new RangedAttribute(makeDescriptionId("armor_penetration"), 0, 0, 114514).setSyncable(true));
             HEAL_EFFECT = ATTRIBUTE_DEFERRED_REGISTER.register("heal_effect", () -> new PercentageAttribute(makeDescriptionId("heal_effect"), 1, 0, 114514).setSyncable(true));
-            OVER_HEAL = ATTRIBUTE_DEFERRED_REGISTER.register("over_heal", () -> new PercentageAttribute(makeDescriptionId("over_heal"), 1, 0.1, 114514).setSyncable(true).setSentiment(Attribute.Sentiment.NEGATIVE));
+            OVER_HEAL = ATTRIBUTE_DEFERRED_REGISTER.register("over_heal", () -> new PercentageAttribute(makeDescriptionId("over_heal"), 0, 0, 114514).setSyncable(true));
         }
 
         if (ironsSSpellBooksLoaded) {

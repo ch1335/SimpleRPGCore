@@ -7,6 +7,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.neoforged.neoforge.entity.PartEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -16,16 +17,26 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class PlayerMixin {
     @Inject(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
     public void MeleeAttack(Entity pTarget, CallbackInfo ci, @Local(ordinal = 0) LocalRef<DamageSource> damageSourceLocalRef) {
+        int targetId = pTarget.getId();
+        if (pTarget instanceof PartEntity<?> partEntity) {
+            targetId = partEntity.getParent().getId();
+        }
         IDamageSourceExtension iDamageSource = (IDamageSourceExtension) damageSourceLocalRef.get();
-        iDamageSource.src$getExtraData().addMeleeDamageEntity(pTarget.getId());
+
+        iDamageSource.src$getExtraData().addMeleeDamageEntity(targetId);
         damageSourceLocalRef.set((DamageSource) iDamageSource);
     }
 
     @Inject(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
     public void SweepingAttack(Entity pTarget, CallbackInfo ci, @Local(ordinal = 0) LocalRef<DamageSource> damageSourceLocalRef, @Local(ordinal = 0) LivingEntity livingEntity) {
+        int targetId = pTarget.getId();
+        if (pTarget instanceof PartEntity<?> partEntity) {
+            targetId = partEntity.getParent().getId();
+        }
+
         IDamageSourceExtension iDamageSource = (IDamageSourceExtension) damageSourceLocalRef.get();
-        iDamageSource.src$getExtraData().addMeleeDamageEntity(livingEntity.getId());
-        iDamageSource.src$getExtraData().addSweepingDamageEntity(livingEntity.getId());
+        iDamageSource.src$getExtraData().addMeleeDamageEntity(targetId);
+        iDamageSource.src$getExtraData().addSweepingDamageEntity(targetId);
         damageSourceLocalRef.set((DamageSource) iDamageSource);
     }
 }

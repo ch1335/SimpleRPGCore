@@ -1,6 +1,7 @@
 package com.chen.simpleRPGCore.network;
 
 import com.chen.simpleRPGCore.SimpleRPGCore;
+import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -41,7 +42,7 @@ public record SimpleDataSetter<T>(int id, StreamCodec<ByteBuf, T> codec, T value
     private static final ArrayList<DataSetterType<Object>> dates = new ArrayList<>();
 
     public static DataSetterType<Object> getDataSetter(int id) {
-        if (id <= DataSetterId) {
+        if (id < DataSetterId) {
             return dates.get(id);
         }
         return null;

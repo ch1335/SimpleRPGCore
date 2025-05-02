@@ -10,11 +10,9 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class NetHandlers {
     public static void sendMana(Player player) {
-        PlayerExtraData playerExtraData = player.getCapability(SRCCapabilities.SRC_PLAYER_DATA);
-        if (playerExtraData != null) {
-            float mana1 = playerExtraData.getMana();
-            int mana = (int) Math.ceil(playerExtraData.getMana());
-            DataSetterTypes.MANA.send(player, mana);
+        PlayerExtraData playerData = player.getCapability(SRCCapabilities.SRC_PLAYER_DATA);
+        if (playerData != null) {
+            DataSetterTypes.MANA.send(player, (int) playerData.getMana());
         }
     }
 
@@ -28,20 +26,26 @@ public class NetHandlers {
         }
     }
 
-    public static void sendShieldAmount(Player player) {
+
+    public static void sendShieldAmount(Player player, float amount) {
         MobExtraData mobExtraData = player.getCapability(SRCCapabilities.SRC_MOB_DATA);
         if (mobExtraData != null) {
-            DataSetterTypes.SHIELD_AMOUNT.send(player, (int) mobExtraData.getRenderShieldAmount());
+            if (amount == -1) {
+                DataSetterTypes.SHIELD_AMOUNT.send(player, mobExtraData.getShieldManager().getShieldAmount());
+            } else {
+                DataSetterTypes.SHIELD_AMOUNT.send(player, amount);
+            }
         }
     }
 
-    public static void setShieldAmount(int overHealAmount, IPayloadContext context) {
+    public static void setShieldAmount(float overHealAmount, IPayloadContext context) {
         Player player = context.player();
         if (player.level().isClientSide) {
             MobExtraData mobExtraData = player.getCapability(SRCCapabilities.SRC_MOB_DATA);
             if (mobExtraData != null) {
-                mobExtraData.setRenderShieldAmount(overHealAmount);
+                mobExtraData.getShieldManager().renderShieldAmount = overHealAmount;
             }
         }
     }
+
 }

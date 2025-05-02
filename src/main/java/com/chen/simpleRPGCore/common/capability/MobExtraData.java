@@ -1,15 +1,12 @@
 package com.chen.simpleRPGCore.common.capability;
 
 import com.chen.simpleRPGCore.API.IShield;
-import com.chen.simpleRPGCore.API.objects.SRCAttributes;
-import com.chen.simpleRPGCore.API.objects.ShieldTypes;
 import com.chen.simpleRPGCore.attachmentType.SRCAttachmentTypes;
+import com.chen.simpleRPGCore.common.ShieldSystem.EntityShieldManager;
 import com.chen.simpleRPGCore.common.ShieldSystem.Shield;
-import com.chen.simpleRPGCore.common.ShieldSystem.UnitShield;
-import com.chen.simpleRPGCore.network.NetHandlers;
+import com.chen.simpleRPGCore.common.specialEffect.SpecialEffectManager;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.common.util.INBTSerializable;
@@ -27,73 +24,48 @@ public class MobExtraData {
         return livingEntity.getData(SRCAttachmentTypes.MOB_DATA);
     }
 
-    public void sycShieldAmount() {
-        if (livingEntity instanceof ServerPlayer player && !player.level().isClientSide) {
-            NetHandlers.sendShieldAmount(player);
-        }
+    public EntityShieldManager getShieldManager() {
+        return getDataHolder().shieldManager;
     }
 
-    public float getRenderShieldAmount() {
-        if (livingEntity.level().isClientSide) {
-            return getDataHolder().renderShieldAmount;
-        } else {
-            float totalShields = 0;
-            for (IShield value : getDataHolder().shield.SHIELD_HOLDERS.values()) {
-                totalShields += value.getTotalAmount();
-            }
-            return totalShields;
-        }
-    }
-
-    public void setRenderShieldAmount(float amount) {
-        getDataHolder().renderShieldAmount = amount;
+    public SpecialEffectManager getSpecialEffectManager() {
+        return getDataHolder().specialMobEffectManager;
     }
 
     public <T extends IShield> T getShield(Shield.ShieldType<T> shieldType) {
-        return getDataHolder().shield.getShield(shieldType);
+        return getShieldManager().shield.getShield(shieldType);
     }
 
     public void tick() {
-        if (getRenderShieldAmount() != getDataHolder().oldShieldAmount) {
-            getDataHolder().oldShieldAmount = getRenderShieldAmount();
-            sycShieldAmount();
-        }
-
-        if (!livingEntity.level().isClientSide) {
-            getDataHolder().overHealShield.setAmount((float) Math.min(livingEntity.getMaxHealth() * livingEntity.getAttributeValue(SRCAttributes.MAX_OVER_HEAL_PERCENTAGE), getDataHolder().overHealShield.getAmount()));
-            getDataHolder().shield.SHIELD_HOLDERS.values().forEach(IShield::tick);
-        }
+        getShieldManager().tick(this, livingEntity);
+        getSpecialEffectManager().tick(livingEntity);
     }
 
     public static class DataHolder implements INBTSerializable<CompoundTag> {
+        private final EntityShieldManager shieldManager = new EntityShieldManager();
 
-        public final Shield shield = new Shield();
+        private final SpecialEffectManager specialMobEffectManager = new SpecialEffectManager();
 
-        public final UnitShield overHealShield;
-
-        public float oldShieldAmount = 0;
-
-        public float renderShieldAmount;
+        public EntityShieldManager getShieldManager() {
+            return shieldManager;
+        }
 
         public DataHolder(IAttachmentHolder holder) {
-            shield.init();
-            overHealShield = shield.getShield(ShieldTypes.OVER_HEAL_SHIELD);
+            shieldManager.init();
         }
 
         @Override
         public @UnknownNullability CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
             CompoundTag tag = new CompoundTag();
-            shield.SHIELD_HOLDERS.forEach((shieldType, iShield) -> {
-                tag.put(shieldType.resourceLocation.toString(), iShield.serializeNBT(provider));
-            });
+            tag.put("ShieldData", shieldManager.save(provider));
+            tag.put("SpecialEffectData", specialMobEffectManager.save(provider));
             return tag;
         }
 
         @Override
         public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
-            Shield.getShieldsPriority().forEach(shieldType -> {
-                shield.getShield(shieldType).deserializeNBT(provider, nbt.getCompound(shieldType.resourceLocation.toString()));
-            });
+            shieldManager.load(provider, nbt.getCompound("ShieldData"));
+            specialMobEffectManager.load(provider, nbt.getCompound("SpecialEffectData"));
         }
     }
 }

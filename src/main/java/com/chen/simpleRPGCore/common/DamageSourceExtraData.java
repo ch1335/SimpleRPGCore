@@ -1,5 +1,6 @@
 package com.chen.simpleRPGCore.common;
 
+import com.chen.simpleRPGCore.API.IShield;
 import com.chen.simpleRPGCore.API.objects.SRCAttributes;
 import com.chen.simpleRPGCore.common.ShieldSystem.Shield;
 import com.chen.simpleRPGCore.event.SRCEventFactory;
@@ -31,9 +32,9 @@ public class DamageSourceExtraData {
 
     private final ImmutableMap<Attribute, OriginalDataHolder<Double>> attributeData;
 
-    public ImmutableList<Shield.ShieldType> byPassesShields = ImmutableList.of();
+    public ImmutableList<Shield.ShieldType<? extends IShield>> byPassesShields = ImmutableList.of();
 
-    public void setByPassesShields(List<Shield.ShieldType> byPassesShields) {
+    public void setByPassesShields(List<Shield.ShieldType<? extends IShield>> byPassesShields) {
         this.byPassesShields = ImmutableList.copyOf(byPassesShields);
     }
 
@@ -41,12 +42,16 @@ public class DamageSourceExtraData {
     public float criticalDamage = 0;
 
     //this is paper for kubejs. don't use this in mod
-    public Optional<Object> customDataHolder = Optional.empty();
+    public Object customData = null;
 
     private float finalDamageAddition = 0;
 
     public void setCustomData(Object customDataHolder) {
-        this.customDataHolder = Optional.of(customDataHolder);
+        this.customData = customDataHolder;
+    }
+
+    public Optional<Object> getCustomData() {
+        return Optional.of(customData);
     }
 
     public DamageSourceExtraData(Entity entity) {

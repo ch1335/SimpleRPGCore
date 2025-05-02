@@ -1,0 +1,12 @@
+{
+  "providers": [
+    {
+      "type": "bitmap",
+      "file": "simple_rpg_core:font/texture_font.png",
+      "ascent": 7,
+      "chars": [
+        "\u0001\u0002\u0003"
+      ]
+    }
+  ]
+}

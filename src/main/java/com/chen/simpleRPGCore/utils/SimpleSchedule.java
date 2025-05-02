@@ -1,15 +1,31 @@
 package com.chen.simpleRPGCore.utils;
 
+import com.chen.simpleRPGCore.SimpleRPGCore;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+@EventBusSubscriber(modid = SimpleRPGCore.MODID, bus = EventBusSubscriber.Bus.GAME)
 public class SimpleSchedule {
+
+    @SubscribeEvent
+    public static void serverSchedule(ServerTickEvent.Post event) {
+        SimpleSchedule.update(Dist.DEDICATED_SERVER);
+    }
+
+    @SubscribeEvent
+    public static void clientSchedule(ClientTickEvent.Post event) {
+        SimpleSchedule.update(Dist.CLIENT);
+    }
 
     private static final Map<Dist, List<Schedule>> DIST_SCHEDULES = ImmutableMap.of(
             Dist.CLIENT, new ArrayList<>(),

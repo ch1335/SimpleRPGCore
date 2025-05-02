@@ -21,7 +21,7 @@ public class FoodDataMixin {
         if (!pPlayer.level().isClientSide) {
             MobExtraData mobExtraData = pPlayer.getCapability(SRCCapabilities.SRC_MOB_DATA);
             if (mobExtraData != null) {
-                src$healBeforeOverHealAmount = mobExtraData.getShield(ShieldTypes.OVER_HEAL_SHIELD).getAmount();
+                src$healBeforeOverHealAmount = mobExtraData.getShield(ShieldTypes.OVER_HEAL_SHIELD.get()).getAmount();
             }
         }
     }
@@ -31,7 +31,7 @@ public class FoodDataMixin {
         if (!pPlayer.level().isClientSide) {
             MobExtraData mobExtraData = pPlayer.getCapability(SRCCapabilities.SRC_MOB_DATA);
             if (mobExtraData != null) {
-                mobExtraData.getShield(ShieldTypes.OVER_HEAL_SHIELD).setAmount(src$healBeforeOverHealAmount);
+                mobExtraData.getShield(ShieldTypes.OVER_HEAL_SHIELD.get()).setAmount(src$healBeforeOverHealAmount);
             }
         }
     }

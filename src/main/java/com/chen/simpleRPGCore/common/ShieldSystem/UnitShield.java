@@ -3,11 +3,12 @@ package com.chen.simpleRPGCore.common.ShieldSystem;
 import com.chen.simpleRPGCore.API.IUnitShield;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;
 
 public class UnitShield implements IUnitShield {
-    private float amount = 0;
+    protected float amount = 0;
 
     public float getAmount() {
         return amount;
@@ -17,8 +18,16 @@ public class UnitShield implements IUnitShield {
         this.amount = amount;
     }
 
+    public UnitShield() {
+
+    }
+
+    public UnitShield(float amount) {
+        this.amount = amount;
+    }
+
     @Override
-    public void tick() {
+    public void tick(LivingEntity livingEntity) {
 
     }
 

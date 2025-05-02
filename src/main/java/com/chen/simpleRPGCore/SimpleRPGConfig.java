@@ -25,16 +25,19 @@ public class SimpleRPGConfig {
 
         public int manaBarX = 100;
         public int manaBarY = -13;
+
         public void load(Configuration cfg) {
             enableManaBar = cfg.getBoolean("enableManaBar", "Client", true, "Configure whether to enable mana bar");
-            manaBarX = cfg.getInt("manaBarX","Client",100,Integer.MIN_VALUE,Integer.MAX_VALUE,"manaBar x position (center is zero)");
-            manaBarY = cfg.getInt("manaBarY","Client",-13,Integer.MIN_VALUE,Integer.MAX_VALUE,"manaBar y position (underside is zero)");
+            manaBarX = cfg.getInt("manaBarX", "Client", 100, Integer.MIN_VALUE, Integer.MAX_VALUE, "manaBar x position (center is zero)");
+            manaBarY = cfg.getInt("manaBarY", "Client", -13, Integer.MIN_VALUE, Integer.MAX_VALUE, "manaBar y position (underside is zero)");
         }
     }
 
     public static class CommonConfig {
         public boolean useVanillaArmorAbsorbFunction = false;
         public boolean enableSimpleAttributeFix = true;
+        public boolean enableManaSystem = false;
+
         public ArmorAbsorbConsumer armorAbsorbFunction = (living, damage, damageSource, armorValue, armorToughness, extraData) -> {
             double armorPenetration = Math.max(0, extraData.getAttributeOriginalHolder(SRCAttributes.ARMOR_PENETRATION).getNew(0) - armorToughness);
             double effectArmor = Math.max(0, armorValue - armorPenetration);
@@ -43,8 +46,13 @@ public class SimpleRPGConfig {
 
         public void load(Configuration cfg) {
             useVanillaArmorAbsorbFunction = cfg.getBoolean("useVanillaArmorAbsorbFunction", "Common", false, "Configure whether use Vanilla ArmorAbsorbFunction\n special if you load apothicAttributes this config will be locked to true and use apothicAttributes CombatRules");
-            enableSimpleAttributeFix = cfg.getBoolean("enableSimpleAttributeFix","Common",true,"enable maxHealth , maxArmor , maxArmorToughness AttributeFix,if true , will set their maximum value to a big number.");
+            enableSimpleAttributeFix = cfg.getBoolean("enableSimpleAttributeFix", "Common", true, "enable maxHealth , maxArmor , maxArmorToughness AttributeFix,if true , will set their maximum value to a big number.");
+
+            enableManaSystem = cfg.getBoolean("enableManaSystem", "Common", false, "whether the mana system enabled,if you loaded Iron's Spells 'n Spellbooks , this will locked to true");
+
             if (SimpleRPGCore.apothicAttributesLoaded) useVanillaArmorAbsorbFunction = true;
+            if (SimpleRPGCore.ironsSSpellBooksLoaded) enableManaSystem = true;
+
         }
 
         public void setArmorAbsorbFunction(ArmorAbsorbConsumer consumer) {

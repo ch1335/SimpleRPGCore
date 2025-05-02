@@ -6,7 +6,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 
 public interface IShield extends INBTSerializable<CompoundTag> {
-    void tick();
+    void tick(LivingEntity livingEntity);
 
     float getTotalAmount();
 

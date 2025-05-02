@@ -8,6 +8,7 @@
     "DamageSourceMixin",
     "DataMainMixin",
     "EnchantmentHelperMixin",
+    "EntityCapabilityMixin",
     "FoodDataMixin",
     "ItemStackMixin",
     "LivingEntityMixin",

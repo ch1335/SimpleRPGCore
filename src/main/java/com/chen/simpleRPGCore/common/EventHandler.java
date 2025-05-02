@@ -1,5 +1,6 @@
 package com.chen.simpleRPGCore.common;
 
+import com.chen.simpleRPGCore.API.objects.DataSetterTypes;
 import com.chen.simpleRPGCore.API.objects.SRCAttributes;
 import com.chen.simpleRPGCore.API.objects.ShieldTypes;
 import com.chen.simpleRPGCore.SimpleRPGCore;
@@ -11,7 +12,6 @@ import com.chen.simpleRPGCore.common.capability.SRCCapabilities;
 import com.chen.simpleRPGCore.event.SRCEventFactory;
 import com.chen.simpleRPGCore.mixinsAPI.minecraft.IDamageSourceExtension;
 import com.chen.simpleRPGCore.network.SimpleDataSetter;
-import com.chen.simpleRPGCore.utils.SimpleSchedule;
 import com.chen.simpleRPGCore.utils.Util;
 import dev.shadowsoffire.apothic_attributes.payload.CritParticlePayload;
 import io.redspace.ironsspellbooks.api.events.SpellOnCastEvent;
@@ -25,20 +25,19 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
-import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.common.damagesource.DamageContainer;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
+import net.neoforged.neoforge.event.entity.EntityTravelToDimensionEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingHealEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
-import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -66,6 +65,11 @@ public class EventHandler {
             if (SRCEventFactory.modifyDamageAfterCritical(container, livingEntity)) event.setCanceled(true);
 
             event.setAmount(event.getAmount() + extraData.getFinalDamageAddition());
+        }
+
+        @SubscribeEvent
+        public static void updateData(PlayerEvent.PlayerChangedDimensionEvent event) {
+            Objects.requireNonNull(event.getEntity().getCapability(SRCCapabilities.SRC_PLAYER_DATA)).sycAll();
         }
 
         @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -113,7 +117,7 @@ public class EventHandler {
                 float overHealAmount = OriginalOverHealAmount * overHealRate;
                 MobExtraData mobExtraData = living.getCapability(SRCCapabilities.SRC_MOB_DATA);
                 if (mobExtraData != null) {
-                    UnitShield shield = mobExtraData.getShield(ShieldTypes.OVER_HEAL_SHIELD);
+                    UnitShield shield = mobExtraData.getShield(ShieldTypes.OVER_HEAL_SHIELD.value());
                     if (shield != null) {
                         shield.addShieldAmount(overHealAmount, maxOverHealAmount);
                     }
@@ -122,10 +126,22 @@ public class EventHandler {
         }
 
         @SubscribeEvent
+        public static void EntityTickEvent$Post(EntityTickEvent.Post event) {
+            if (!event.getEntity().level().isClientSide) {
+                MobExtraData mobExtraData = event.getEntity().getCapability(SRCCapabilities.SRC_MOB_DATA);
+                if (mobExtraData != null) {
+                    mobExtraData.tick();
+                }
+            }
+        }
+
+        @SubscribeEvent
         public static void PlayerTickEvent$Post(PlayerTickEvent.Post event) {
             if (!event.getEntity().level().isClientSide) {
-                Objects.requireNonNull(event.getEntity().getCapability(SRCCapabilities.SRC_PLAYER_DATA)).tick();
-                Objects.requireNonNull(event.getEntity().getCapability(SRCCapabilities.SRC_MOB_DATA)).tick();
+                PlayerExtraData playerExtraData = event.getEntity().getCapability(SRCCapabilities.SRC_PLAYER_DATA);
+                if (playerExtraData != null) {
+                    playerExtraData.tick();
+                }
             }
         }
 
@@ -133,19 +149,22 @@ public class EventHandler {
         public static void onPLayerLoginIn(PlayerEvent.PlayerLoggedInEvent event) {
             if (event.getEntity() instanceof ServerPlayer player) {
                 Objects.requireNonNull(player.getCapability(SRCCapabilities.SRC_PLAYER_DATA)).sycAll();
-                Objects.requireNonNull(player.getCapability(SRCCapabilities.SRC_MOB_DATA)).sycShieldAmount();
+                Objects.requireNonNull(player.getCapability(SRCCapabilities.SRC_MOB_DATA)).getShieldManager().sycShieldAmount(player);
             }
         }
 
-
         @SubscribeEvent
-        public static void serverSchedule(ServerTickEvent.Post event) {
-            SimpleSchedule.update(Dist.DEDICATED_SERVER);
-        }
-
-        @SubscribeEvent
-        public static void clientSchedule(ClientTickEvent.Post event) {
-            SimpleSchedule.update(Dist.CLIENT);
+        public static void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+            if (event.getEntity() instanceof ServerPlayer player) {
+                PlayerExtraData playerExtraData = player.getCapability(SRCCapabilities.SRC_PLAYER_DATA);
+                if (playerExtraData != null) {
+                    playerExtraData.sycAll();
+                }
+                MobExtraData mobExtraData = player.getCapability(SRCCapabilities.SRC_MOB_DATA);
+                if (mobExtraData != null) {
+                    mobExtraData.getShieldManager().sycShieldAmount(player);
+                }
+            }
         }
 
         public static class IronsSpellBooksEventHandler {
@@ -181,6 +200,7 @@ public class EventHandler {
 
         @SubscribeEvent
         public static void RegisterCapabilitiesEvent(RegisterCapabilitiesEvent event) {
+
             event.registerEntity(SRCCapabilities.SRC_PLAYER_DATA, EntityType.PLAYER, (player, ctx) -> new PlayerExtraData(player));
             BuiltInRegistries.ENTITY_TYPE.stream()
                     .filter(DefaultAttributes::hasSupplier)
@@ -196,6 +216,7 @@ public class EventHandler {
 
         @SubscribeEvent
         public static void RegisterPayloadHandlersEvent(RegisterPayloadHandlersEvent event) {
+            DataSetterTypes.init();
             final PayloadRegistrar registrar = event.registrar("1");
             registrar.playBidirectional(SimpleDataSetter.TYPE, SimpleDataSetter.STREAM_CODEC, SimpleDataSetter::handler);
         }

@@ -38,5 +38,7 @@ public class Config {
     public static class CommonConfig {
         private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
         static final ModConfigSpec SPEC = BUILDER.build();
+
+
     }
 }

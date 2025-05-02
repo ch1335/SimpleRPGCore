@@ -4,8 +4,14 @@
   "simple_rpg_core.attribute.name.generic.life_steal": "Life Steal",
   "simple_rpg_core.attribute.name.generic.armor_penetration": "Armor Penetration",
   "simple_rpg_core.attribute.name.generic.mining_fortune": "Mining Fortune",
+  "simple_rpg_core.attribute.name.generic.mining_fortune.desc": "Increase the number of ore drops that will be affected by fortune",
+
   "simple_rpg_core.attribute.name.generic.mob_looting": "Looting",
+  "simple_rpg_core.attribute.name.generic.mob_looting.desc": "Increase the quality and quantity of dropped items for killing creatures",
+
   "simple_rpg_core.attribute.name.generic.heal_effect": "Heal Effect",
+  "simple_rpg_core.attribute.name.generic.heal_effect.desc": "The efficiency of your treatment",
+
   "simple_rpg_core.attribute.name.generic.mending": "Mending",
   "simple_rpg_core.attribute.name.generic.max_mana": "Max Mana",
   "simple_rpg_core.attribute.name.generic.mana_regain": "Mana Regain",
@@ -13,6 +19,8 @@
   "simple_rpg_core.attribute.name.generic.mana_cost": "Mana Cost",
   "simple_rpg_core.attribute.name.generic.over_heal": "Over Heal",
   "simple_rpg_core.attribute.name.generic.max_over_heal_percentage": "Maximum Overtreatment Life Percentage",
+  "simple_rpg_core.attribute.name.generic.max_over_heal_percentage.desc": "The maximum excess treatment shield that can be stored based on your maximum health",
+
   "simple_rpg_core.attribute.fix": "This attribute has been redesigned by SimpleRPGCore:",
-  "simple_rpg_core.attribute.fix.over_heal": "When the amount of treatment overflows, the overflowing amount of treatment will be converted into shield based on this attribute，Up to 20% of your maximum health."
+  "simple_rpg_core.attribute.fix.over_heal": "When the amount of treatment overflows, the overflowing amount of treatment will be converted into shield based on this attribute"
 }

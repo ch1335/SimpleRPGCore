@@ -6,5 +6,8 @@ import net.minecraft.network.codec.ByteBufCodecs;
 
 public class DataSetterTypes {
     public static SimpleDataSetter.DataSetterType<Integer> MANA = SimpleDataSetter.DataSetterType.create(ByteBufCodecs.INT, NetHandlers::setMana);
-    public static SimpleDataSetter.DataSetterType<Integer> SHIELD_AMOUNT = SimpleDataSetter.DataSetterType.create(ByteBufCodecs.INT, NetHandlers::setShieldAmount);
+    public static SimpleDataSetter.DataSetterType<Float> SHIELD_AMOUNT = SimpleDataSetter.DataSetterType.create(ByteBufCodecs.FLOAT, NetHandlers::setShieldAmount);
+
+    public static void init() {
+    }
 }

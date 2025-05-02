@@ -4,8 +4,14 @@
   "simple_rpg_core.attribute.name.generic.life_steal": "生命窃取",
   "simple_rpg_core.attribute.name.generic.armor_penetration": "护甲穿透",
   "simple_rpg_core.attribute.name.generic.mining_fortune": "挖掘幸运",
+  "simple_rpg_core.attribute.name.generic.mining_fortune.desc": "增加会受时运影响的矿物的掉落物数量",
+
   "simple_rpg_core.attribute.name.generic.mob_looting": "抢夺等级",
+  "simple_rpg_core.attribute.name.generic.mob_looting.desc": "增加击杀生物的掉落物品的质量和数量",
+
   "simple_rpg_core.attribute.name.generic.heal_effect": "治疗效率",
+  "simple_rpg_core.attribute.name.generic.heal_effect.desc": "你受到治疗的效率",
+
   "simple_rpg_core.attribute.name.generic.mending": "修补",
   "simple_rpg_core.attribute.name.generic.max_mana": "最大魔力值",
   "simple_rpg_core.attribute.name.generic.mana_regain": "魔力恢复",
@@ -13,6 +19,10 @@
   "simple_rpg_core.attribute.name.generic.mana_cost": "魔力消耗",
   "simple_rpg_core.attribute.name.generic.over_heal": "过量治疗",
   "simple_rpg_core.attribute.name.generic.max_over_heal_percentage": "最大过量治疗生命值百分比",
+  "simple_rpg_core.attribute.name.generic.max_over_heal_percentage.desc": "基于你最大生命值的能储存的最大过量治疗护盾",
+
   "simple_rpg_core.attribute.fix": "这个属性已经被SimpleRPGCore重新设计:",
-  "simple_rpg_core.attribute.fix.over_heal": "当治疗量溢出时，溢出的治疗量会基于这个属性转换为护盾，最高为你最大生命值的20%。"
+  "simple_rpg_core.attribute.fix.over_heal": "当治疗量溢出时，溢出的治疗量会基于这个属性转换为护盾",
+  "simple_rpg_core.itemSkill.test.normal": "右键消耗你%d§b魔力值",
+  "simple_rpg_core.itemSkill.test.detail": "右键消耗你%d+§c5x攻击伤害%d§r的§b魔力值"
 }

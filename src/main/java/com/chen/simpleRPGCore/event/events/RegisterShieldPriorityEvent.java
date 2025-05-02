@@ -2,6 +2,7 @@ package com.chen.simpleRPGCore.event.events;
 
 import com.chen.simpleRPGCore.API.IShield;
 import com.chen.simpleRPGCore.common.ShieldSystem.Shield;
+import net.minecraft.core.Holder;
 import net.neoforged.bus.api.Event;
 
 import java.util.List;

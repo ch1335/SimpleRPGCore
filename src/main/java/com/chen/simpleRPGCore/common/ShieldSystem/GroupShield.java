@@ -5,6 +5,7 @@ import com.chen.simpleRPGCore.API.IUnitShield;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -16,11 +17,11 @@ public class GroupShield<T extends IUnitShield> implements IShield {
     private final Shield.UnitShieldFactory<T> unitShieldFactory;
 
     @Override
-    public void tick() {
+    public void tick(LivingEntity livingEntity) {
         Iterator<T> iterator = units.iterator();
         while (iterator.hasNext()) {
             T next = iterator.next();
-            next.tick();
+            next.tick(livingEntity);
             if (next.getAmount() <= 0) {
                 iterator.remove();
             }
@@ -34,6 +35,10 @@ public class GroupShield<T extends IUnitShield> implements IShield {
     public T addUnit(T unit) {
         units.add(unit);
         return unit;
+    }
+
+    public ArrayList<T> getUnits() {
+        return units;
     }
 
     @Override

@@ -16,12 +16,11 @@ import org.jetbrains.annotations.UnknownNullability;
 
 public class PlayerExtraData {
 
-    private final Player player;
+    public Player player;
 
     public PlayerExtraData(Player player) {
         this.player = player;
     }
-
 
     public float getMana() {
         if (SimpleRPGCore.ironsSSpellBooksLoaded) {

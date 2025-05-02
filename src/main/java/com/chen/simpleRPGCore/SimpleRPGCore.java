@@ -1,6 +1,6 @@
 package com.chen.simpleRPGCore;
 
-import com.chen.simpleRPGCore.API.objects.SRCAttributes;
+import com.chen.simpleRPGCore.API.objects.*;
 import com.chen.simpleRPGCore.attachmentType.SRCAttachmentTypes;
 import com.chen.simpleRPGCore.common.DamageSourceExtraData;
 import com.chen.simpleRPGCore.common.EventHandler;
@@ -29,6 +29,7 @@ import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -57,6 +58,9 @@ public class SimpleRPGCore {
         SRCAttributes.ATTRIBUTE_DEFERRED_REGISTER.register(modEventBus);
         SRCAttachmentTypes.ATTACHMENT_TYPES.register(modEventBus);
         SRCItems.ITEMS.register(modEventBus);
+        ShieldTypes.SHIELD_TYPE_DEFERRED_REGISTER.register(modEventBus);
+        SpecialMobEffects.SPECIAL_EFFECT_DEFERRED_REGISTER.register(modEventBus);
+        Conditions.CONDITION_DEFERRED_REGISTER.register(modEventBus);
         modEventBus.register(this);
 
         if (ironsSSpellBooksLoaded) {
@@ -105,5 +109,11 @@ public class SimpleRPGCore {
             AttributeFix.fix();
         }
         Shield.setPriority();
+    }
+
+    @SubscribeEvent
+    private void registerRegistries(NewRegistryEvent event) {
+        event.register(SRCRegistries.SPECIAL_EFFECT);
+        event.register(SRCRegistries.SHIELD_TYPE);
     }
 }

@@ -32,16 +32,16 @@ public class AdditionalHeartRender {
         if (mobExtraData == null) {
             return;
         }
-
-        float f = Math.max((float) player.getAttributeValue(Attributes.MAX_HEALTH), mobExtraData.getRenderShieldAmount());
+        float renderShieldAmount = mobExtraData.getShieldManager().renderShieldAmount;
+        float f = Math.max((float) player.getAttributeValue(Attributes.MAX_HEALTH), renderShieldAmount);
         int k1 = Mth.ceil(player.getAbsorptionAmount());
         int l1 = Mth.ceil((f + (float) k1) / 2.0F / 10.0F);
         int height = Math.max(10 - (l1 - 2), 3);
-        int l2 = Mth.ceil(mobExtraData.getRenderShieldAmount() / 20F);
+        int l2 = Mth.ceil(renderShieldAmount / 20F);
         int x = guiGraphics.guiWidth() / 2 - 91;
         int y = guiGraphics.guiHeight() - gui.leftHeight;
         gui.leftHeight += (l2 - 1) * height + 10 - (10 - height);
-        renderHearts(guiGraphics, x, y + (10 - height), height, mobExtraData.getRenderShieldAmount(), (int) mobExtraData.getRenderShieldAmount());
+        renderHearts(guiGraphics, x, y + (10 - height), height, renderShieldAmount, (int) renderShieldAmount);
     }
 
     private static void renderHearts(

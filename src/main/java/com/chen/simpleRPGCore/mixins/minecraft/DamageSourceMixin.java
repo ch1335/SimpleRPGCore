@@ -28,7 +28,7 @@ public class DamageSourceMixin implements IDamageSourceExtension {
     private void init(Holder<DamageType> pType, Entity pDirectEntity, Entity pCausingEntity, Vec3 pDamageSourcePosition, CallbackInfo ci) {
         src$extraData = new DamageSourceExtraData(pCausingEntity);
         if (pDirectEntity instanceof Projectile projectile && ((IProjectileMixinExtension) projectile).src$isBypassesCooldownHit()) {
-            src$extraData.addAdditionTags(DamageTypeTags.BYPASSES_COOLDOWN);
+            src$extraData.addOriginalAdditionTags(DamageTypeTags.BYPASSES_COOLDOWN);
         }
     }
 

@@ -10,7 +10,7 @@ import com.chen.simpleRPGCore.event.events.RegisterShieldPriorityEvent;
 import com.chen.simpleRPGCore.mixinsAPI.minecraft.IDamageSourceExtension;
 import com.chen.simpleRPGCore.tags.SRCDamageTags;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Holder;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
@@ -28,7 +28,7 @@ public class Shield {
         return (T) SHIELD_HOLDERS.get(shieldType);
     }
 
-    public static ImmutableList<ShieldType<? extends IShield>> getShieldsPriority() {
+    public static ImmutableList<ShieldType<?>> getShieldsPriority() {
         return SHIELDS_PRIORITY;
     }
 
@@ -37,9 +37,9 @@ public class Shield {
         DamageSourceExtraData extraData = ((IDamageSourceExtension) event.getSource()).src$getExtraData();
         MobExtraData mobExtraData = livingEntity.getCapability(SRCCapabilities.SRC_MOB_DATA);
         if (mobExtraData != null && !event.getSource().is(SRCDamageTags.BYPASSES_SHIELD)) {
-            for (ShieldType<? extends IShield> shieldType : SHIELDS_PRIORITY) {
-                if (extraData.byPassesShields.stream().noneMatch(byPassesShield -> byPassesShield == shieldType)) {
-                    IShield shield = mobExtraData.getDataHolder().shield.SHIELD_HOLDERS.get(shieldType);
+            for (ShieldType<? extends IShield> holder : SHIELDS_PRIORITY) {
+                if (extraData.byPassesShields.stream().noneMatch(byPassesShield -> byPassesShield == holder)) {
+                    IShield shield = mobExtraData.getShieldManager().shield.SHIELD_HOLDERS.get(holder);
                     if (shield != null && shield.getTotalAmount() > 0) {
                         float newDamage = shield.tryAbsorb(livingEntity, shield, event.getSource(), event.getNewDamage());
                         event.setNewDamage(newDamage);
@@ -57,32 +57,12 @@ public class Shield {
 
     public static void setPriority() {
         List<ShieldType<? extends IShield>> shieldsPriority = new ArrayList<>(64);
-        shieldsPriority.add(ShieldTypes.OVER_HEAL_SHIELD);
+        shieldsPriority.add(ShieldTypes.OVER_HEAL_SHIELD.get());
         NeoForge.EVENT_BUS.post(new RegisterShieldPriorityEvent(shieldsPriority));
         SHIELDS_PRIORITY = ImmutableList.copyOf(shieldsPriority);
     }
 
-    public static class ShieldType<T extends IShield> {
-        public static final Map<ResourceLocation, ShieldType<? extends IShield>> REGISTERED_SHIELD_TYPE = new HashMap<>();
-        public final ResourceLocation resourceLocation;
-        public final ShieldFactory<T> factory;
-
-        public static <T extends IShield> ShieldType<T> getOrCreate(ResourceLocation resourceLocation, ShieldFactory<T> factory) {
-            return (ShieldType<T>) REGISTERED_SHIELD_TYPE.computeIfAbsent(resourceLocation, l -> new ShieldType<>(l, factory));
-        }
-
-        public static ShieldType<UnitShield> getOrCreate(ResourceLocation resourceLocation) {
-            return getOrCreate(resourceLocation, UnitShield::new);
-        }
-
-        public static <T extends IShield> ShieldType<T> get(ResourceLocation resourceLocation) {
-            return (ShieldType<T>) REGISTERED_SHIELD_TYPE.get(resourceLocation);
-        }
-
-        private ShieldType(ResourceLocation resourceLocation, ShieldFactory<T> factory) {
-            this.resourceLocation = resourceLocation;
-            this.factory = factory;
-        }
+    public record ShieldType<T extends IShield>(ShieldFactory<T> factory) {
     }
 
     public interface ShieldFactory<T extends IShield> {
