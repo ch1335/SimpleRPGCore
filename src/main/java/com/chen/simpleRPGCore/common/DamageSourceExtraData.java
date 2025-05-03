@@ -159,6 +159,7 @@ public class DamageSourceExtraData {
             attributes.add(SRCAttributes.CRITICAL_DAMAGE);
             attributes.add(SRCAttributes.LIFE_STEAL);
             attributes.add(SRCAttributes.ARMOR_PENETRATION);
+            attributes.add(SRCAttributes.CAUSE_DAMAGE);
             SRCEventFactory.addDamageSourceExtraAttributes(attributes);
             attributes.forEach(builder::add);
             attributes = builder.build();

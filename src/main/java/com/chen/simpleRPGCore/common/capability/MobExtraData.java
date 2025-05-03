@@ -38,7 +38,7 @@ public class MobExtraData {
 
     public void tick() {
         getShieldManager().tick(this, livingEntity);
-        getSpecialEffectManager().tick(livingEntity);
+//        getSpecialEffectManager().tick(livingEntity);
     }
 
     public static class DataHolder implements INBTSerializable<CompoundTag> {

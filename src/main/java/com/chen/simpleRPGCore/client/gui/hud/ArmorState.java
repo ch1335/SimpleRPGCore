@@ -33,6 +33,6 @@ public class ArmorState implements LayeredDraw.Layer {
         poseStack.popPose();
 
         guiGraphics.drawString(Minecraft.getInstance().font, String.valueOf(armorValue), x + 12, y+1 , Color.LIGHT_GRAY.getRGB(), false);
-        gui.leftHeight += 8;
+        gui.leftHeight += 9;
     }
 }

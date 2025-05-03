@@ -7,11 +7,10 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffects;
 import org.jetbrains.annotations.NotNull;
-
-import java.awt.*;
 
 public class FoodState implements LayeredDraw.Layer {
     private static final ResourceLocation FOOD_EMPTY_SPRITE = ResourceLocation.withDefaultNamespace("hud/food_empty");
@@ -37,15 +36,15 @@ public class FoodState implements LayeredDraw.Layer {
             resourceLocation = FOOD_FULL_SPRITE;
         }
         poseStack.pushPose();
-        poseStack.translate(x, y, 0);
-        poseStack.scale(1.1F,1.1F,0);
+        poseStack.translate(x + 70, y, 0);
+        poseStack.scale(1.1F, 1.1F, 0);
         guiGraphics.blitSprite(FOOD_EMPTY_SPRITE, 0, 0, 9, 9);
         guiGraphics.blitSprite(resourceLocation, 0, 0, 9, 9);
         poseStack.popPose();
 
-        String string = player.getFoodData().getFoodLevel() + "|" + player.getFoodData().getSaturationLevel();
-
-        guiGraphics.drawString(Minecraft.getInstance().font, string, x + 12, y+1, 10317123,false);
-        gui.rightHeight += 8;
+        Component component = Component.empty().append(Component.literal(String.valueOf(player.getFoodData().getFoodLevel())).withColor(12092504)).append("|").append(Component.literal(String.format("%.0f", player.getFoodData().getSaturationLevel())));
+        int width = Minecraft.getInstance().font.width(component);
+        guiGraphics.drawString(Minecraft.getInstance().font, component, x + 43 - width +26, y + 1, 10317123, false);
+        gui.rightHeight += 9;
     }
 }

@@ -31,7 +31,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.damagesource.DamageContainer;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
-import net.neoforged.neoforge.event.entity.EntityTravelToDimensionEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingHealEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
@@ -64,7 +63,9 @@ public class EventHandler {
 
             if (SRCEventFactory.modifyDamageAfterCritical(container, livingEntity)) event.setCanceled(true);
 
-            event.setAmount(event.getAmount() + extraData.getFinalDamageAddition());
+            float causeDamage = (float) extraData.getAttributeOriginalHolder(SRCAttributes.CAUSE_DAMAGE).getNew(1);
+            float receiveDamage = (float) event.getEntity().getAttributeValue(SRCAttributes.RECEIVE_DAMAGE);
+            event.setAmount(event.getAmount() * causeDamage * receiveDamage + extraData.getFinalDamageAddition());
         }
 
         @SubscribeEvent
@@ -195,6 +196,8 @@ public class EventHandler {
                 event.add(entityType, SRCAttributes.MENDING);
                 event.add(entityType, SRCAttributes.OVER_HEAL);
                 event.add(entityType, SRCAttributes.MAX_OVER_HEAL_PERCENTAGE);
+                event.add(entityType, SRCAttributes.CAUSE_DAMAGE);
+                event.add(entityType, SRCAttributes.RECEIVE_DAMAGE);
             });
         }
 

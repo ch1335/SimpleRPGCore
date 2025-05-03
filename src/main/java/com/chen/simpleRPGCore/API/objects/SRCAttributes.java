@@ -44,9 +44,13 @@ public class SRCAttributes {
 
     public static final DeferredHolder<Attribute, Attribute> MAX_OVER_HEAL_PERCENTAGE = ATTRIBUTE_DEFERRED_REGISTER.register("max_over_heal_percentage", () -> new PercentageAttribute(makeDescriptionId("max_over_heal_percentage"), 0, 0, 114514).setSyncable(true));
 
+    public static final DeferredHolder<Attribute, Attribute> CAUSE_DAMAGE = ATTRIBUTE_DEFERRED_REGISTER.register("cause_damage", () -> new PercentageAttribute(makeDescriptionId("cause_damage"), 1, 0, 114514).setSyncable(true));
+
+    public static final DeferredHolder<Attribute, Attribute> RECEIVE_DAMAGE = ATTRIBUTE_DEFERRED_REGISTER.register("receive_damage", () -> new PercentageAttribute(makeDescriptionId("receive_damage"), 1, 0, 114514).setSyncable(true).setSentiment(Attribute.Sentiment.NEGATIVE));
+
     static {
-        boolean apothicAttributesLoaded = SimpleRPGCore.apothicAttributesLoaded && ! IDataMainMixinExtension.isRunData.get();
-        boolean ironsSSpellBooksLoaded = SimpleRPGCore.ironsSSpellBooksLoaded && ! IDataMainMixinExtension.isRunData.get();
+        boolean apothicAttributesLoaded = SimpleRPGCore.apothicAttributesLoaded && !IDataMainMixinExtension.isRunData.get();
+        boolean ironsSSpellBooksLoaded = SimpleRPGCore.ironsSSpellBooksLoaded && !IDataMainMixinExtension.isRunData.get();
 
         if (apothicAttributesLoaded) {
             CRITICAL_CHANCE = (DeferredHolder<Attribute, Attribute>) ALObjects.Attributes.CRIT_CHANCE;
@@ -75,7 +79,7 @@ public class SRCAttributes {
         }
     }
 
-    public enum AttributeResourceLocationHolder{
+    public enum AttributeResourceLocationHolder {
         CRITICAL_CHANCE("critical_chance"),
         CRITICAL_DAMAGE("critical_damage"),
         LIFE_STEAL("life_steal"),
@@ -87,12 +91,13 @@ public class SRCAttributes {
         MANA_REGAIN("mana_regain"),
         MANA_POWER("mana_power");
         public final String name;
+
         AttributeResourceLocationHolder(String name) {
             this.name = name;
         }
 
-        public ResourceLocation getResourceLocation(){
-            return ResourceLocation.fromNamespaceAndPath(SimpleRPGCore.MODID,name);
+        public ResourceLocation getResourceLocation() {
+            return ResourceLocation.fromNamespaceAndPath(SimpleRPGCore.MODID, name);
         }
 
     }
